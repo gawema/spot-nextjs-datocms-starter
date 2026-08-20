@@ -2556,6 +2556,12 @@ type PageModelStructuredTextField {
 
 """Record of type 📝 Page (page)"""
 type PageRecord implements RecordInterface {
+  _allSectionsLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [TextSectionRecordListListNonNullMultiLocaleField!]
   _allSlugLocales(
     """
     If you want to fallback to a default translation when a translation has not been found
@@ -2588,6 +2594,15 @@ type PageRecord implements RecordInterface {
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
   id: ItemId!
+  sections(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [TextSectionRecord!]!
   seoAnalysis: JsonField
   seoSettingsSocial: SeoField
   slug(
@@ -2658,6 +2673,13 @@ type Query {
     filter: PageModelFilter
   ): CollectionMetadata!
 
+  """Returns meta information regarding a record collection"""
+  _allSchemaMigrationsMeta(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+    filter: SchemaMigrationModelFilter
+  ): CollectionMetadata!
+
   """Returns meta information regarding an assets collection"""
   _allUploadsMeta(
     """The locale to use to fetch the field's content"""
@@ -2695,6 +2717,25 @@ type Query {
     orderBy: [PageModelOrderBy] = [_updatedAt_DESC]
   ): [PageRecord!]!
 
+  """Returns a collection of records"""
+  allSchemaMigrations(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+
+    """Skip the first results"""
+    skip: IntType
+
+    """Limit the number of results"""
+    first: IntType = 20
+    filter: SchemaMigrationModelFilter
+    orderBy: [SchemaMigrationModelOrderBy] = [_updatedAt_DESC]
+  ): [SchemaMigrationRecord!]!
+
   """Returns a collection of assets"""
   allUploads(
     """The locale to use to fetch the field's content"""
@@ -2726,6 +2767,19 @@ type Query {
     filter: PageModelFilter
     orderBy: [PageModelOrderBy] = [_updatedAt_DESC]
   ): PageRecord
+
+  """Returns a specific record"""
+  schemaMigration(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+    filter: SchemaMigrationModelFilter
+    orderBy: [SchemaMigrationModelOrderBy] = [_updatedAt_DESC]
+  ): SchemaMigrationRecord
 
   """Returns a specific asset"""
   upload(
@@ -2797,6 +2851,68 @@ type ResponsiveImage {
   title: String
   webpSrcSet: String!
   width: IntType!
+}
+
+input SchemaMigrationModelFilter {
+  _createdAt: CreatedAtFilter
+  id: ItemIdFilter
+  _firstPublishedAt: PublishedAtFilter
+  _publicationScheduledAt: PublishedAtFilter
+  _unpublishingScheduledAt: PublishedAtFilter
+  _publishedAt: PublishedAtFilter
+  _status: StatusFilter
+  _updatedAt: UpdatedAtFilter
+  _isValid: BooleanFilter
+  name: StringFilter
+  OR: [SchemaMigrationModelFilter]
+  AND: [SchemaMigrationModelFilter]
+}
+
+enum SchemaMigrationModelOrderBy {
+  _createdAt_ASC
+  _createdAt_DESC
+  id_ASC
+  id_DESC
+  _firstPublishedAt_ASC
+  _firstPublishedAt_DESC
+  _publicationScheduledAt_ASC
+  _publicationScheduledAt_DESC
+  _unpublishingScheduledAt_ASC
+  _unpublishingScheduledAt_DESC
+  _publishedAt_ASC
+  _publishedAt_DESC
+  _status_ASC
+  _status_DESC
+  _updatedAt_ASC
+  _updatedAt_DESC
+  _isValid_ASC
+  _isValid_DESC
+  name_ASC
+  name_DESC
+}
+
+"""Record of type Schema migration (schema_migration)"""
+type SchemaMigrationRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  id: ItemId!
+  name: String!
 }
 
 type SeoField {
@@ -2967,6 +3083,45 @@ type TestRecord implements RecordInterface {
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
   id: ItemId!
+}
+
+union TextSectionModelBodyBlocksField = ImageBlockRecord | ImageGalleryBlockRecord | VideoBlockRecord
+
+type TextSectionModelBodyField {
+  blocks: [TextSectionModelBodyBlocksField!]!
+  inlineBlocks: [String!]!
+  links: [PageRecord!]!
+  value: JsonField!
+}
+
+"""Block of type 📄 Text Section (text_section)"""
+type TextSectionRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  body: TextSectionModelBodyField!
+  heading: String
+  id: ItemId!
+}
+
+type TextSectionRecordListListNonNullMultiLocaleField {
+  locale: SiteLocale
+  value: [TextSectionRecord!]!
 }
 
 """Specifies how to filter by upload type"""
