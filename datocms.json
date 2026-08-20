@@ -1,8 +1,8 @@
 {
-  "name": "Next Starter Kit",
-  "description": "A Next.js project template powered by DatoCMS",
+  "name": "SPOT Starter Next",
+  "description": "SPOT's Next.js + DatoCMS starter",
   "previewImage": "https://www.datocms-assets.com/205/1770110778-tech-starter-kit.png?w=600&auto=format",
-  "datocmsProjectId": "186629",
+  "datocmsProjectId": "225924",
   "deploymentType": "static",
   "buildCommand": "npm run build",
   "environmentVariables": {
@@ -26,7 +26,6 @@
       "type": "datocmsProjectUrl"
     }
   },
-  "livePreviewUrl": "https://datocms-nextjs-starter-kit.vercel.app/",
   "postDeploy": {
     "type": "apiCall",
     "url": "/api/post-deploy",
