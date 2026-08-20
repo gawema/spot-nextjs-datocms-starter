@@ -1,3 +1,60 @@
+type AccordionItemModelBodyField {
+  blocks: [String!]!
+  inlineBlocks: [String!]!
+  links: [PageRecord!]!
+  value: JsonField!
+}
+
+"""Block of type 🪗 Accordion item (accordion_item)"""
+type AccordionItemRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  body: AccordionItemModelBodyField!
+  heading: String!
+  id: ItemId!
+}
+
+"""Block of type 🪗 Accordion Section (accordion_section)"""
+type AccordionSectionRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  heading: String
+  id: ItemId!
+  items: [AccordionItemRecord!]!
+}
+
 """Specifies how to filter Boolean fields"""
 input BooleanFilter {
   """Search for records with an exact match"""
@@ -440,6 +497,37 @@ type ImageGalleryBlockRecord implements RecordInterface {
   _updatedAt: DateTime!
   assets: [ImageFileField!]!
   id: ItemId!
+}
+
+"""Block of type 🖼️ Image with Text Section (image_with_text_section)"""
+type ImageWithTextSectionRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  body(
+    """Process content as markdown"""
+    markdown: Boolean
+  ): String
+  heading: String
+  id: ItemId!
+  image: FileField!
+  invertedLayout: BooleanType!
+  link: LinkRecord
 }
 
 input ImgixParams {
@@ -2452,6 +2540,33 @@ input JsonFilter {
   exists: BooleanType
 }
 
+"""Block of type 🔗 Link (link)"""
+type LinkRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  externalUrl: String
+  id: ItemId!
+  label: String
+  openInNewTab: BooleanType!
+  page: PageRecord
+}
+
 """Specifies how to filter by locale"""
 input LocalesFilter {
   """Filter records that are localized in all the specified locales"""
@@ -2545,6 +2660,13 @@ enum PageModelOrderBy {
   title_DESC
 }
 
+union PageModelSectionsField = AccordionSectionRecord | ImageWithTextSectionRecord | TextSectionRecord
+
+type PageModelSectionsFieldListListNonNullMultiLocaleField {
+  locale: SiteLocale
+  value: [PageModelSectionsField!]!
+}
+
 union PageModelStructuredTextBlocksField = ImageBlockRecord | ImageGalleryBlockRecord | VideoBlockRecord
 
 type PageModelStructuredTextField {
@@ -2561,7 +2683,7 @@ type PageRecord implements RecordInterface {
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
-  ): [TextSectionRecordListListNonNullMultiLocaleField!]
+  ): [PageModelSectionsFieldListListNonNullMultiLocaleField!]
   _allSlugLocales(
     """
     If you want to fallback to a default translation when a translation has not been found
@@ -2602,7 +2724,7 @@ type PageRecord implements RecordInterface {
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
-  ): [TextSectionRecord!]!
+  ): [PageModelSectionsField!]!
   seoAnalysis: JsonField
   seoSettingsSocial: SeoField
   slug(
@@ -3062,29 +3184,6 @@ type Tag {
   tag: String!
 }
 
-"""Block of type 🌰 TEST (test)"""
-type TestRecord implements RecordInterface {
-  _createdAt: DateTime!
-
-  """Editing URL"""
-  _editingUrl: String
-  _firstPublishedAt: DateTime!
-  _isValid: BooleanType!
-  _modelApiKey: String!
-  _publicationScheduledAt: DateTime
-  _publishedAt: DateTime!
-
-  """Generates SEO and Social card meta tags to be used in your frontend"""
-  _seoMetaTags(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-  ): [Tag!]!
-  _status: ItemStatus!
-  _unpublishingScheduledAt: DateTime
-  _updatedAt: DateTime!
-  id: ItemId!
-}
-
 union TextSectionModelBodyBlocksField = ImageBlockRecord | ImageGalleryBlockRecord | VideoBlockRecord
 
 type TextSectionModelBodyField {
@@ -3117,11 +3216,6 @@ type TextSectionRecord implements RecordInterface {
   body: TextSectionModelBodyField!
   heading: String
   id: ItemId!
-}
-
-type TextSectionRecordListListNonNullMultiLocaleField {
-  locale: SiteLocale
-  value: [TextSectionRecord!]!
 }
 
 """Specifies how to filter by upload type"""
