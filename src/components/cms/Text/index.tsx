@@ -1,4 +1,4 @@
-import HeadingWithAnchorLink from '@/components/HeadingWithAnchorLink';
+import HeadingWithAnchorLink from '@/components/cms/HeadingWithAnchorLink';
 import { type CdaStructuredTextRecord, isCode, isHeading } from 'datocms-structured-text-utils';
 import dynamic from 'next/dynamic';
 import {
@@ -59,4 +59,4 @@ export function Text<
  * Components and imported libraries, and only include them in the client bundle
  * when they're needed.
  */
-const Code = dynamic(() => import('@/components/Code'));
+const Code = dynamic(() => import('@/components/cms/Code'));

@@ -1,5 +1,5 @@
-import ContentLink from '@/components/ContentLink';
-import DraftModeToggler from '@/components/DraftModeToggler';
+import ContentLink from '@/components/cms/ContentLink';
+import DraftModeToggler from '@/components/dev/DraftModeToggler';
 import { TagFragment } from '@/lib/datocms/commonFragments';
 import { executeQuery } from '@/lib/datocms/executeQuery';
 import { graphql } from '@/lib/datocms/graphql';
