@@ -7,6 +7,7 @@
  *
  * See: https://www.datocms.com/docs/content-management-api/resources/item#type-safe-development-with-typescript
  */
+import { isSupportedLocale, localizePathname } from '@/lib/i18n/locales';
 import type { RawApiTypes } from '@datocms/cma-client';
 import { type AnyModel, Page } from './cma-types';
 
@@ -25,10 +26,14 @@ export async function recordToWebsiteRoute(
   item: RawApiTypes.Item<AnyModel>,
   locale: string,
 ): Promise<string | null> {
+  if (!isSupportedLocale(locale)) {
+    return null;
+  }
+
   switch (item.__itemTypeId) {
     case Page.ID: {
       const slug = await recordToSlug(item, locale);
-      return slug ? `/${slug}` : null;
+      return slug ? localizePathname(`/${slug}`, locale) : null;
     }
     /*
      * Add more cases here as you add more models to your DatoCMS schema.
@@ -49,15 +54,20 @@ export async function recordToWebsiteRoute(
 
 export async function recordToSlug(
   item: RawApiTypes.Item<AnyModel>,
-  _locale: string,
+  locale: string,
 ): Promise<string | null> {
+  if (!isSupportedLocale(locale)) {
+    return null;
+  }
+
   switch (item.__itemTypeId) {
     case Page.ID: {
       /*
        * Using generated types, TypeScript knows exactly which fields exist.
-       * `item.attributes.slug` is fully typed - no casts needed!
+       * `item.attributes.slug` is fully typed - no casts needed! Localized
+       * fields arrive as one value per locale, hence the lookup.
        */
-      return item.attributes.slug;
+      return item.attributes.slug[locale] ?? null;
     }
     /*
      * Add more cases here as you add more models to your DatoCMS schema.

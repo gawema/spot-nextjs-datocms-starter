@@ -1,7 +1,7 @@
 import type { ItemTypeDefinition } from '@datocms/cma-client';
 
 type EnvironmentSettings = {
-  locales: 'en';
+  locales: 'de' | 'en';
 };
 
 export type ImageGalleryBlock = ItemTypeDefinition<
@@ -24,6 +24,7 @@ export type Page = ItemTypeDefinition<
   {
     title: {
       type: 'string';
+      localized: true;
     };
     structured_text: {
       type: 'structured_text';
@@ -31,6 +32,7 @@ export type Page = ItemTypeDefinition<
     };
     slug: {
       type: 'slug';
+      localized: true;
     };
     seo_settings_social: {
       type: 'seo';
