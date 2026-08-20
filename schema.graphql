@@ -2631,7 +2631,6 @@ input PageModelFilter {
   seoAnalysis: JsonFilter
   seoSettingsSocial: SeoFilter
   slug: SlugFilter
-  structuredText: StructuredTextFilter
   title: StringFilter
   OR: [PageModelFilter]
   AND: [PageModelFilter]
@@ -2665,15 +2664,6 @@ union PageModelSectionsField = AccordionSectionRecord | ImageWithTextSectionReco
 type PageModelSectionsFieldListListNonNullMultiLocaleField {
   locale: SiteLocale
   value: [PageModelSectionsField!]!
-}
-
-union PageModelStructuredTextBlocksField = ImageBlockRecord | ImageGalleryBlockRecord | VideoBlockRecord
-
-type PageModelStructuredTextField {
-  blocks: [PageModelStructuredTextBlocksField!]!
-  inlineBlocks: [String!]!
-  links: [PageRecord!]!
-  value: JsonField!
 }
 
 """Record of type 📝 Page (page)"""
@@ -2736,7 +2726,6 @@ type PageRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): String!
-  structuredText: PageModelStructuredTextField!
   title(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -3152,30 +3141,6 @@ input StringMatchesFilter {
 type StringNonNullMultiLocaleField {
   locale: SiteLocale
   value: String!
-}
-
-"""Specifies how to filter Structured Text fields values"""
-input StructuredTextFilter {
-  """Filter records based on a regular expression"""
-  matches: StringMatchesFilter
-
-  """Exclude records based on a regular expression"""
-  notMatches: StringMatchesFilter
-
-  """
-  Filter records with the specified field set as blank (null or single empty paragraph)
-  """
-  isBlank: BooleanType
-
-  """
-  Filter records with the specified field present (neither null, nor empty string)
-  """
-  isPresent: BooleanType
-
-  """
-  Filter records with the specified field defined (i.e. with any value) or not [DEPRECATED]
-  """
-  exists: BooleanType
 }
 
 type Tag {

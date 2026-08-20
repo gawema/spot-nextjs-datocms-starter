@@ -62,10 +62,6 @@ export type Page = ItemTypeDefinition<
       type: 'string';
       localized: true;
     };
-    structured_text: {
-      type: 'structured_text';
-      blocks: ImageGalleryBlock | ImageBlock | VideoBlock;
-    };
     sections: {
       type: 'rich_text';
       blocks: TextSection | AccordionSection | ImageWithTextSection;
