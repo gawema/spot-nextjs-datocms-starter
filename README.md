@@ -1,4 +1,4 @@
-# SPOT Next + DatoCMS base
+# SPOT Next.js + DatoCMS starter
 
 Starting point for SPOT client projects on Next.js + DatoCMS. Forked from
 [datocms/nextjs-starter-kit](https://github.com/datocms/nextjs-starter-kit), paired with the
@@ -6,7 +6,7 @@ DatoCMS template project **SPOT Starter Next** (project id `225924`).
 
 ## Starting a new client project
 
-1. Open `https://dashboard.datocms.com/deploy?repo=gawema/spot-starter-next:main`.
+1. Open `https://dashboard.datocms.com/deploy?repo=gawema/spot-nextjs-datocms-starter:main`.
    Name the project after the client and create it under the SPOT organization.
 2. Choose Vercel when asked for hosting. The flow creates the CDA/CMA tokens, injects them
    as env vars, and calls `/api/post-deploy` to register the cache-invalidation webhook.
@@ -15,7 +15,7 @@ DatoCMS template project **SPOT Starter Next** (project id `225924`).
    first edit, while both trees are still identical:
 
    ```bash
-   git remote add base https://github.com/gawema/spot-starter-next.git
+   git remote add base https://github.com/gawema/spot-nextjs-datocms-starter.git
    git fetch base
    git merge base/main --allow-unrelated-histories
    ```
