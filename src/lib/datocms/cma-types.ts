@@ -45,6 +45,16 @@ export const Page = {
   REF: { type: 'item_type', id: 'JdG722SGTSG_jEB1Jx-0XA' },
 } as const;
 
+export type Test = ItemTypeDefinition<
+  EnvironmentSettings,
+  'Ui477ClZQkaSptmiEP7KUg',
+  {}
+>;
+export const Test = {
+  ID: 'Ui477ClZQkaSptmiEP7KUg',
+  REF: { type: 'item_type', id: 'Ui477ClZQkaSptmiEP7KUg' },
+} as const;
+
 export type ImageBlock = ItemTypeDefinition<
   EnvironmentSettings,
   'dZOhbVOTSpeaaA-wQMgPCA',
@@ -73,6 +83,6 @@ export const VideoBlock = {
   REF: { type: 'item_type', id: 'duRvS1PrT4u6QGJZUmyINA' },
 } as const;
 
-export type AnyBlock = ImageGalleryBlock | ImageBlock | VideoBlock;
+export type AnyBlock = ImageGalleryBlock | Test | ImageBlock | VideoBlock;
 export type AnyModel = Page;
 export type AnyBlockOrModel = AnyBlock | AnyModel;
