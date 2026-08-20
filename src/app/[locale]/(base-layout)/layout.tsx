@@ -6,7 +6,7 @@ import { graphql } from '@/lib/datocms/graphql';
 import { draftMode } from 'next/headers';
 import { toNextMetadata } from 'react-datocms/seo';
 
-import '../global.css';
+import '../../global.css';
 import { Metadata } from 'next';
 
 const query = graphql(
