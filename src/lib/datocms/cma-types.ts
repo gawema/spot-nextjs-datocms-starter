@@ -45,11 +45,7 @@ export const Page = {
   REF: { type: 'item_type', id: 'JdG722SGTSG_jEB1Jx-0XA' },
 } as const;
 
-export type Test = ItemTypeDefinition<
-  EnvironmentSettings,
-  'Ui477ClZQkaSptmiEP7KUg',
-  {}
->;
+export type Test = ItemTypeDefinition<EnvironmentSettings, 'Ui477ClZQkaSptmiEP7KUg', {}>;
 export const Test = {
   ID: 'Ui477ClZQkaSptmiEP7KUg',
   REF: { type: 'item_type', id: 'Ui477ClZQkaSptmiEP7KUg' },
