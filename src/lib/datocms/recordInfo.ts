@@ -28,7 +28,7 @@ export async function recordToWebsiteRoute(
   switch (item.__itemTypeId) {
     case Page.ID: {
       const slug = await recordToSlug(item, locale);
-      return slug ? `/real-time-updates/${slug}` : null;
+      return slug ? `/${slug}` : null;
     }
     /*
      * Add more cases here as you add more models to your DatoCMS schema.

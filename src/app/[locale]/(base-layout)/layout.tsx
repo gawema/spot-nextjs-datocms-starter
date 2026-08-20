@@ -52,8 +52,6 @@ export default async function BaseLayout({
         <h1>DatoCMS + Next.js Starter Kit</h1>
         <nav>
           <a href="https://www.datocms.com/docs/next-js">📚 Full Integration Guide</a>
-          <a href="/basic">🔧 Basic Route</a>
-          <a href="/real-time-updates">⚡️ Real-time Updates Route</a>
         </nav>
         <DraftModeToggler draftModeEnabled={isDraftModeEnabled} />
       </header>

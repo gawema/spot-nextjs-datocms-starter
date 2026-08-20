@@ -6,8 +6,8 @@ import { type FragmentOf, graphql, readFragment } from '@/lib/datocms/graphql';
  *
  * The fragment is always declared even when only `slug` is needed: callers
  * compose the fragment, never raw fields, so the URL shape can grow (e.g. to
- * `/basic/page/[year]/[slug]`) without touching any caller. The builder
- * accepts the masked fragment and unmasks internally.
+ * `/[year]/[slug]`) without touching any caller. The builder accepts the masked
+ * fragment and unmasks internally.
  */
 export const PageUrlFragment = graphql(/* GraphQL */ `
   fragment PageUrlFragment on PageRecord {
@@ -17,5 +17,5 @@ export const PageUrlFragment = graphql(/* GraphQL */ `
 
 export function buildUrlForPage(page: FragmentOf<typeof PageUrlFragment>) {
   const data = readFragment(PageUrlFragment, page);
-  return `/basic/page/${data.slug}`;
+  return `/${data.slug}`;
 }
