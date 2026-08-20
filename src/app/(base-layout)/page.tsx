@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Home | Tech Starter Kit',
+  title: 'Home | SPOT Starter Next',
 };
 
 export default function Page() {

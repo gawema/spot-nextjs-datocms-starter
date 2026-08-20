@@ -27,6 +27,12 @@ export async function executeQuery<Result, Variables>(
       ? process.env.DATOCMS_DRAFT_CONTENT_CDA_TOKEN!
       : process.env.DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN!,
     /*
+     * When DATOCMS_ENVIRONMENT is set (e.g. "staging" in .env.local), all
+     * queries are routed to that environment via the X-Environment header.
+     * Leave unset in production to use the primary environment.
+     */
+    environment: process.env.DATOCMS_ENVIRONMENT,
+    /*
      * Enable content-link for draft content only. This embeds stega-encoded
      * metadata in text fields, which the @datocms/content-link package uses
      * to create click-to-edit overlays. When editors click on content, they're
