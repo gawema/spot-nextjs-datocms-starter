@@ -1,4 +1,5 @@
 import type { FragmentOf } from '@/lib/datocms/graphql';
+import type { SiteLocale } from '@/lib/i18n/locales';
 import { PageUrlFragment, buildUrlForPage } from './page';
 
 /**
@@ -24,10 +25,10 @@ type RoutableRecord = FragmentOf<typeof PageUrlFragment> & {
   __typename: 'PageRecord';
 };
 
-export function buildUrlFromGql(record: RoutableRecord): string {
+export function buildUrlFromGql(record: RoutableRecord, locale: SiteLocale): string {
   switch (record.__typename) {
     case 'PageRecord':
-      return buildUrlForPage(record);
+      return buildUrlForPage(record, locale);
   }
 }
 

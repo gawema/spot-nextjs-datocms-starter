@@ -1,5 +1,6 @@
 import { PageUrlFragment, buildUrlForPage } from '@/lib/datocms/gqlUrlBuilder/page';
 import { type FragmentOf, graphql, readFragment } from '@/lib/datocms/graphql';
+import type { SiteLocale } from '@/lib/i18n/locales';
 import Link from 'next/link';
 
 /**
@@ -37,14 +38,15 @@ export const PageInlineFragment = graphql(
 
 type Props = {
   record: FragmentOf<typeof PageInlineFragment>;
+  locale: SiteLocale;
 };
 
-export default function PageInline({ record }: Props) {
+export default function PageInline({ record, locale }: Props) {
   const unmaskedRecord = readFragment(PageInlineFragment, record);
 
   return (
     <Link
-      href={buildUrlForPage(unmaskedRecord)}
+      href={buildUrlForPage(unmaskedRecord, locale)}
       className="pill"
       data-datocms-content-link-boundary
     >

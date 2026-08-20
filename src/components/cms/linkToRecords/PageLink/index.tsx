@@ -1,5 +1,6 @@
 import { PageUrlFragment, buildUrlForPage } from '@/lib/datocms/gqlUrlBuilder/page';
 import { type FragmentOf, graphql, readFragment } from '@/lib/datocms/graphql';
+import type { SiteLocale } from '@/lib/i18n/locales';
 import type { TransformedMeta } from 'datocms-structured-text-generic-html-renderer';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
@@ -39,15 +40,16 @@ export const PageLinkFragment = graphql(
 
 type Props = {
   record: FragmentOf<typeof PageLinkFragment>;
+  locale: SiteLocale;
   transformedMeta: TransformedMeta;
   children: ReactNode;
 };
 
-export default function PageLink({ record, transformedMeta, children }: Props) {
+export default function PageLink({ record, transformedMeta, locale, children }: Props) {
   const unmaskedRecord = readFragment(PageLinkFragment, record);
 
   return (
-    <Link {...transformedMeta} href={buildUrlForPage(unmaskedRecord)}>
+    <Link {...transformedMeta} href={buildUrlForPage(unmaskedRecord, locale)}>
       {children}
     </Link>
   );
