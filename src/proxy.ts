@@ -18,8 +18,7 @@ export const config = {
   /*
    * Run on all paths except:
    * - /api (route handlers: draft mode, webhooks, previews)
-   * - /private-datocms-plugin (locale-independent plugin screen)
    * - Next.js internals and static files (anything with a dot)
    */
-  matcher: '/((?!api|private-datocms-plugin|_next|_vercel|.*\\..*).*)',
+  matcher: '/((?!api|_next|_vercel|.*\\..*).*)',
 };
