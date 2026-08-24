@@ -20,7 +20,7 @@
     },
     "SECRET_API_TOKEN": {
       "type": "string",
-      "value": "secretTokenProtectingWebhookEndpointsFromBeingCalledByAnyone"
+      "value": "CHANGE-ME-BEFORE-GOING-LIVE"
     },
     "DATOCMS_BASE_EDITING_URL": {
       "type": "datocmsProjectUrl"

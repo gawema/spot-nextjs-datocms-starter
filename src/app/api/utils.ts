@@ -14,6 +14,35 @@ export function withCORS(responseInit?: ResponseInit): ResponseInit {
   };
 }
 
+/**
+ * The value `datocms.json` seeds into a freshly deployed project. The route
+ * handlers refuse to work while it is still in place: a starter whose webhooks
+ * quietly accept a token published in a public repository is worse than one
+ * that stops working until someone sets a real secret.
+ */
+export const PLACEHOLDER_API_TOKEN = 'CHANGE-ME-BEFORE-GOING-LIVE';
+
+/**
+ * Guards the route handlers that DatoCMS calls. Returns the response to send
+ * back when the request must be refused, or `null` when it may proceed.
+ */
+export function rejectUnauthorizedRequest(token: string | null) {
+  const expected = process.env.SECRET_API_TOKEN;
+
+  if (!expected || expected === PLACEHOLDER_API_TOKEN) {
+    return invalidRequestResponse(
+      'SECRET_API_TOKEN is missing or still the placeholder from datocms.json. Set a real random value in the hosting environment, then update the token in the URLs of the DatoCMS plugins and webhooks that call this route.',
+      500,
+    );
+  }
+
+  if (token !== expected) {
+    return invalidRequestResponse('Invalid token', 401);
+  }
+
+  return null;
+}
+
 export function handleUnexpectedError(error: unknown) {
   try {
     throw error;

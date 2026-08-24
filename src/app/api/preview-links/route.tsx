@@ -1,7 +1,7 @@
 import { recordToWebsiteRoute } from '@/lib/datocms/recordInfo';
 import { deserializeRawItem } from '@datocms/rest-client-utils';
 import { type NextRequest, NextResponse } from 'next/server';
-import { handleUnexpectedError, invalidRequestResponse, withCORS } from '../utils';
+import { handleUnexpectedError, rejectUnauthorizedRequest, withCORS } from '../utils';
 
 export async function OPTIONS() {
   return new Response('OK', withCORS());
@@ -30,8 +30,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const token = request.nextUrl.searchParams.get('token');
 
     // Ensure that the request is coming from a trusted source
-    if (token !== process.env.SECRET_API_TOKEN) {
-      return invalidRequestResponse('Invalid token', 401);
+    const unauthorized = rejectUnauthorizedRequest(token);
+
+    if (unauthorized) {
+      return unauthorized;
     }
 
     /**

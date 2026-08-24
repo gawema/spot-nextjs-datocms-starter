@@ -6,6 +6,7 @@ import {
   invalidRequestResponse,
   isSafeRedirectUrl,
   makeDraftModeWorkWithinIframes,
+  rejectUnauthorizedRequest,
 } from '../../utils';
 
 export const dynamic = 'force-dynamic';
@@ -23,8 +24,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
   try {
     // Ensure that the request is coming from a trusted source
-    if (token !== process.env.SECRET_API_TOKEN) {
-      return invalidRequestResponse('Invalid token', 401);
+    const unauthorized = rejectUnauthorizedRequest(token);
+
+    if (unauthorized) {
+      return unauthorized;
     }
 
     // Avoid open redirect vulnerabilities

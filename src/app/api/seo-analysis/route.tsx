@@ -9,7 +9,12 @@ import type { AnyModel } from '@/lib/datocms/cma-types';
 import { parse } from 'node-html-parser';
 import { cookies, draftMode } from 'next/headers';
 import { type NextRequest, NextResponse } from 'next/server';
-import { handleUnexpectedError, invalidRequestResponse, withCORS } from '../utils';
+import {
+  handleUnexpectedError,
+  invalidRequestResponse,
+  rejectUnauthorizedRequest,
+  withCORS,
+} from '../utils';
 
 export const dynamic = 'force-dynamic';
 
@@ -39,8 +44,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const token = request.nextUrl.searchParams.get('token');
 
     // Ensure that the request is coming from a trusted source
-    if (token !== process.env.SECRET_API_TOKEN) {
-      return invalidRequestResponse('Invalid token', 401);
+    const unauthorized = rejectUnauthorizedRequest(token);
+
+    if (unauthorized) {
+      return unauthorized;
     }
 
     /**
