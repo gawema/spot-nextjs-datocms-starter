@@ -2540,6 +2540,83 @@ input JsonFilter {
   exists: BooleanType
 }
 
+"""Record of type 🧩 Layout (layout)"""
+type LayoutRecord implements RecordInterface {
+  _allFooterLinksLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [LinkRecordListListNonNullMultiLocaleField!]
+  _allFooterTextLocales(
+    """Process content as markdown"""
+    markdown: Boolean
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringMultiLocaleField!]
+  _allNavigationLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [MenuItemRecordListListNonNullMultiLocaleField!]
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _locales: [SiteLocale!]!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  footerLinks(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [LinkRecord!]!
+  footerText(
+    """Process content as markdown"""
+    markdown: Boolean
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String
+  id: ItemId!
+  logo: FileField
+  navigation(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [MenuItemRecord!]!
+  socialLinks: [LinkRecord!]!
+}
+
 """Block of type 🔗 Link (link)"""
 type LinkRecord implements RecordInterface {
   _createdAt: DateTime!
@@ -2567,6 +2644,11 @@ type LinkRecord implements RecordInterface {
   page: PageRecord
 }
 
+type LinkRecordListListNonNullMultiLocaleField {
+  locale: SiteLocale
+  value: [LinkRecord!]!
+}
+
 """Specifies how to filter by locale"""
 input LocalesFilter {
   """Filter records that are localized in all the specified locales"""
@@ -2579,6 +2661,36 @@ input LocalesFilter {
 
   """Filter records that are not localized in any of the specified locales"""
   notIn: [SiteLocale!]
+}
+
+"""Block of type 🔽 Menu item (menu_item)"""
+type MenuItemRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  dropdown: [LinkRecord!]!
+  id: ItemId!
+  link: LinkRecord!
+}
+
+type MenuItemRecordListListNonNullMultiLocaleField {
+  locale: SiteLocale
+  value: [MenuItemRecord!]!
 }
 
 scalar MetaTagAttributes
@@ -2866,6 +2978,17 @@ type Query {
     orderBy: [UploadOrderBy] = [_createdAt_DESC]
   ): [FileField!]!
 
+  """Returns the single instance record"""
+  layout(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): LayoutRecord
+
   """Returns a specific record"""
   page(
     """The locale to use to fetch the field's content"""
@@ -3136,6 +3259,11 @@ input StringMatchesFilter {
   pattern: String!
   caseSensitive: BooleanType = false
   regexp: BooleanType = true
+}
+
+type StringMultiLocaleField {
+  locale: SiteLocale
+  value: String
 }
 
 type StringNonNullMultiLocaleField {

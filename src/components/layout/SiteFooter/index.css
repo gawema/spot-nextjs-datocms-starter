@@ -1,0 +1,33 @@
+.site-footer {
+  background: var(--bg-subtle);
+  margin-block-start: var(--padding-vertical-large);
+}
+
+.site-footer__inner {
+  display: grid;
+  gap: var(--spacing-space-large);
+  margin-inline: auto;
+  max-width: 72rem;
+}
+
+.site-footer__text {
+  color: var(--text-muted);
+  margin-block-end: 0;
+  max-width: 40rem;
+}
+
+.site-footer__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-space-medium);
+}
+
+.site-footer__link {
+  color: var(--text-body);
+  font-size: var(--font-size-text-small);
+  text-decoration: none;
+}
+
+.site-footer__link:hover {
+  text-decoration: underline;
+}

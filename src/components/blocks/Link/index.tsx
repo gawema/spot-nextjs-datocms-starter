@@ -30,9 +30,11 @@ export const LinkFragment = graphql(
 type Props = {
   data: FragmentOf<typeof LinkFragment>;
   locale: SiteLocale;
+  /** Defaults to the call-to-action look. Navigation and footer pass their own. */
+  className?: string;
 };
 
-export default function Link({ data, locale }: Props) {
+export default function Link({ data, locale, className = 'cms-link' }: Props) {
   const { label, externalUrl, openInNewTab, page } = readFragment(LinkFragment, data);
 
   const href = page ? buildUrlForPage(page, locale) : externalUrl;
@@ -46,7 +48,7 @@ export default function Link({ data, locale }: Props) {
 
   return (
     <NextLink
-      className="cms-link"
+      className={className}
       href={href}
       {...(openInNewTab ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
       data-datocms-content-link-boundary

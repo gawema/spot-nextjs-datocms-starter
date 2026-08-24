@@ -5,8 +5,7 @@
 .site-header__inner {
   align-items: center;
   display: flex;
-  gap: var(--spacing-space-medium);
-  justify-content: space-between;
+  gap: var(--spacing-space-large);
   margin-inline: auto;
   max-width: 72rem;
   min-height: var(--site-header-height-mobile);
@@ -45,4 +44,70 @@
   .site-header__inner {
     min-height: var(--site-header-height);
   }
+}
+
+.site-header__brand img {
+  height: 2rem;
+  width: auto;
+}
+
+.site-nav {
+  margin-inline-end: auto;
+}
+
+.site-nav__list,
+.site-nav__dropdown {
+  display: flex;
+  list-style: none;
+  margin-block-end: 0;
+  padding-inline-start: 0;
+}
+
+.site-nav__list {
+  gap: var(--spacing-space-medium);
+}
+
+.site-nav__item {
+  margin-block-start: 0;
+  position: relative;
+}
+
+.site-nav__link {
+  color: var(--text-body);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.site-nav__link:hover {
+  text-decoration: underline;
+}
+
+/*
+ * Second level: hidden until the entry is hovered or holds focus, which covers
+ * pointer and keyboard without a line of JavaScript.
+ */
+.site-nav__dropdown {
+  background: var(--bg-page);
+  border: 1px solid var(--bg-border);
+  border-radius: var(--corner-radius-medium);
+  flex-direction: column;
+  gap: var(--spacing-space-small);
+  inset-inline-start: 0;
+  opacity: 0;
+  padding: var(--spacing-space-small) var(--spacing-space-medium);
+  pointer-events: none;
+  position: absolute;
+  top: 100%;
+  transition: opacity var(--motion-duration-fast) var(--motion-ease-out);
+  z-index: 1;
+}
+
+.site-nav__item:hover .site-nav__dropdown,
+.site-nav__item:focus-within .site-nav__dropdown {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.site-nav__dropdown li {
+  margin-block-start: 0;
 }

@@ -36,6 +36,38 @@ export const ImageGalleryBlock = {
   REF: { type: 'item_type', id: 'CoOdvsbUR8GLtGeuenXzMw' },
 } as const;
 
+export type Layout = ItemTypeDefinition<
+  EnvironmentSettings,
+  'DTCftzw4S4aKyD39qpXpgQ',
+  {
+    logo: {
+      type: 'file';
+    };
+    navigation: {
+      type: 'rich_text';
+      blocks: MenuItem;
+      localized: true;
+    };
+    footer_text: {
+      type: 'text';
+      localized: true;
+    };
+    footer_links: {
+      type: 'rich_text';
+      blocks: Link;
+      localized: true;
+    };
+    social_links: {
+      type: 'rich_text';
+      blocks: Link;
+    };
+  }
+>;
+export const Layout = {
+  ID: 'DTCftzw4S4aKyD39qpXpgQ',
+  REF: { type: 'item_type', id: 'DTCftzw4S4aKyD39qpXpgQ' },
+} as const;
+
 export type AccordionSection = ItemTypeDefinition<
   EnvironmentSettings,
   'GHPlTJWYQL-RItt_mgAzYg',
@@ -82,6 +114,25 @@ export type Page = ItemTypeDefinition<
 export const Page = {
   ID: 'JdG722SGTSG_jEB1Jx-0XA',
   REF: { type: 'item_type', id: 'JdG722SGTSG_jEB1Jx-0XA' },
+} as const;
+
+export type MenuItem = ItemTypeDefinition<
+  EnvironmentSettings,
+  'K4xLvAO-RuSKyqg2C6KcsA',
+  {
+    link: {
+      type: 'single_block';
+      blocks: Link;
+    };
+    dropdown: {
+      type: 'rich_text';
+      blocks: Link;
+    };
+  }
+>;
+export const MenuItem = {
+  ID: 'K4xLvAO-RuSKyqg2C6KcsA',
+  REF: { type: 'item_type', id: 'K4xLvAO-RuSKyqg2C6KcsA' },
 } as const;
 
 export type ImageWithTextSection = ItemTypeDefinition<
@@ -197,10 +248,11 @@ export type AnyBlock =
   | TextSection
   | ImageGalleryBlock
   | AccordionSection
+  | MenuItem
   | ImageWithTextSection
   | AccordionItem
   | ImageBlock
   | VideoBlock
   | Link;
-export type AnyModel = Page | SchemaMigration;
+export type AnyModel = Layout | Page | SchemaMigration;
 export type AnyBlockOrModel = AnyBlock | AnyModel;

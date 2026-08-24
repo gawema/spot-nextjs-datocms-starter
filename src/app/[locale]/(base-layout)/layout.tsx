@@ -1,36 +1,15 @@
 import ContentLink from '@/components/cms/ContentLink';
+import SiteFooter from '@/components/layout/SiteFooter';
 import SiteHeader from '@/components/layout/SiteHeader';
-import { TagFragment } from '@/lib/datocms/commonFragments';
 import { executeQuery } from '@/lib/datocms/executeQuery';
-import { graphql } from '@/lib/datocms/graphql';
 import { toSiteLocale } from '@/lib/i18n/params';
+import { LayoutQuery } from '@/lib/query/layoutQuery';
 import { SITE_URL } from '@/lib/seo/site';
 import { draftMode } from 'next/headers';
 import { toNextMetadata } from 'react-datocms/seo';
 
 import '../../global.css';
 import { Metadata } from 'next';
-
-/*
- * The site name lives in the project's SEO preferences on DatoCMS, so the
- * header reads it from there instead of from a constant no client project would
- * think to change.
- */
-const query = graphql(
-  /* GraphQL */ `
-    query LayoutQuery($locale: SiteLocale!) {
-      _site {
-        faviconMetaTags {
-          ...TagFragment
-        }
-        globalSeo(locale: $locale, fallbackLocales: [de]) {
-          siteName
-        }
-      }
-    }
-  `,
-  [TagFragment],
-);
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -41,7 +20,7 @@ export async function generateMetadata({ params }: LayoutProps): Promise<Metadat
   const { locale } = await params;
   const { isEnabled: isDraftModeEnabled } = await draftMode();
 
-  const data = await executeQuery(query, {
+  const data = await executeQuery(LayoutQuery, {
     variables: { locale: toSiteLocale(locale) },
     includeDrafts: isDraftModeEnabled,
   });
@@ -57,7 +36,7 @@ export default async function BaseLayout({ children, params }: Readonly<LayoutPr
   const { locale } = await params;
   const { isEnabled: isDraftModeEnabled } = await draftMode();
 
-  const { _site } = await executeQuery(query, {
+  const { _site, layout } = await executeQuery(LayoutQuery, {
     variables: { locale: toSiteLocale(locale) },
     includeDrafts: isDraftModeEnabled,
   });
@@ -76,11 +55,13 @@ export default async function BaseLayout({ children, params }: Readonly<LayoutPr
       */}
       {isDraftModeEnabled && <ContentLink />}
       <SiteHeader
+        data={layout}
         siteName={_site.globalSeo?.siteName ?? null}
         locale={toSiteLocale(locale)}
         isDraftModeEnabled={isDraftModeEnabled}
       />
       <main>{children}</main>
+      <SiteFooter data={layout} locale={toSiteLocale(locale)} />
     </>
   );
 }
