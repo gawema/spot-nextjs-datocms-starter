@@ -4,6 +4,7 @@ import { TagFragment } from '@/lib/datocms/commonFragments';
 import { executeQuery } from '@/lib/datocms/executeQuery';
 import { graphql } from '@/lib/datocms/graphql';
 import { toSiteLocale } from '@/lib/i18n/params';
+import { SITE_URL } from '@/lib/seo/site';
 import { draftMode } from 'next/headers';
 import { toNextMetadata } from 'react-datocms/seo';
 
@@ -45,7 +46,11 @@ export async function generateMetadata({ params }: LayoutProps): Promise<Metadat
     includeDrafts: isDraftModeEnabled,
   });
 
-  return toNextMetadata(data._site.faviconMetaTags);
+  return {
+    // Resolves the relative URLs DatoCMS emits in SEO and social meta tags.
+    metadataBase: new URL(SITE_URL),
+    ...toNextMetadata(data._site.faviconMetaTags),
+  };
 }
 
 export default async function BaseLayout({ children, params }: Readonly<LayoutProps>) {

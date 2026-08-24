@@ -23,12 +23,18 @@ export const PageUrlFragment = graphql(/* GraphQL */ `
   }
 `);
 
-export function buildUrlForPage(page: FragmentOf<typeof PageUrlFragment>, locale: SiteLocale) {
-  const data = readFragment(PageUrlFragment, page);
+/**
+ * The path of a page, given its slug in that language. Callers that hold a
+ * record use `buildUrlForPage`; the sitemap, which reads raw slugs per locale,
+ * uses this directly.
+ *
+ * `slug` is localized, so it already comes back in the queried locale: only the
+ * prefix is left to add, and the default locale carries none.
+ */
+export function pagePathname(slug: string, locale: SiteLocale): string {
+  return localizePathname(slug === HOME_SLUG ? '/' : `/${slug}`, locale);
+}
 
-  /*
-   * `slug` is localized, so it already comes back in the queried locale: only
-   * the prefix is left to add, and the default locale carries none.
-   */
-  return localizePathname(data.slug === HOME_SLUG ? '/' : `/${data.slug}`, locale);
+export function buildUrlForPage(page: FragmentOf<typeof PageUrlFragment>, locale: SiteLocale) {
+  return pagePathname(readFragment(PageUrlFragment, page).slug, locale);
 }

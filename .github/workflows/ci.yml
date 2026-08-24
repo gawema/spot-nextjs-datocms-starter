@@ -69,8 +69,9 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: npm
-      # The layout queries DatoCMS for the site name at build time, so the build
-      # only runs once the CDA token is available as a repository secret.
+      # sitemap.ts and robots.ts are prerendered, and the layout asks DatoCMS for
+      # the site name, so the build only runs once the CDA token is available as a
+      # repository secret.
       - if: env.DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN == ''
         run: echo "::notice::Skipped, DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN secret is not set"
       - if: env.DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN != ''

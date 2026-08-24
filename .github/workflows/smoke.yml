@@ -1,0 +1,57 @@
+name: Smoke test
+
+# Runs when Vercel reports a successful deployment, which is a different moment
+# from the pull request checks in ci.yml. Keeping it in its own workflow means
+# neither file lists jobs it has to skip.
+on:
+  deployment_status:
+
+concurrency:
+  group: smoke-${{ github.event.deployment_status.environment_url }}
+  cancel-in-progress: true
+
+jobs:
+  pages:
+    name: Sitemap pages respond
+    if: github.event.deployment_status.state == 'success'
+    runs-on: ubuntu-latest
+    env:
+      BASE_URL: ${{ github.event.deployment_status.environment_url }}
+      # Preview deployments sit behind Vercel SSO. Generate the bypass token in
+      # Vercel under Settings > Deployment Protection > Protection Bypass for
+      # Automation, and store it here as a repository secret.
+      BYPASS: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+      MAX_PAGES: 10
+    steps:
+      # Takes the paths straight from the deployment's own sitemap, so the list
+      # follows the CMS instead of hardcoded slugs, and checks the first ten.
+      - name: Request the first ten sitemap pages
+        run: |
+          set -euo pipefail
+          auth=()
+          if [ -n "${BYPASS:-}" ]; then
+            auth=(-H "x-vercel-protection-bypass: $BYPASS")
+          fi
+          status=$(curl -s -o sitemap.xml -w '%{http_code}' "${auth[@]}" "$BASE_URL/sitemap.xml")
+          if [ "$status" != "200" ] && [ -z "${BYPASS:-}" ]; then
+            echo "::notice::Skipped, $BASE_URL/sitemap.xml returned $status and no VERCEL_AUTOMATION_BYPASS_SECRET is set (protected preview)"
+            exit 0
+          fi
+          if [ "$status" != "200" ]; then
+            echo "::error::$BASE_URL/sitemap.xml returned $status"
+            exit 1
+          fi
+          paths=$(grep -oE '<loc>[^<]+' sitemap.xml \
+            | sed -E -e 's|<loc>||' -e 's|^https?://[^/]*||' \
+            | head -n "$MAX_PAGES")
+          if [ -z "$paths" ]; then
+            echo "::error::The sitemap returned no URLs"
+            exit 1
+          fi
+          failed=0
+          while IFS= read -r path; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' "${auth[@]}" "$BASE_URL$path")
+            echo "$code $BASE_URL$path"
+            [ "$code" = "200" ] || failed=1
+          done <<< "$paths"
+          [ "$failed" = "0" ] || { echo "::error::Some pages did not return 200"; exit 1; }
