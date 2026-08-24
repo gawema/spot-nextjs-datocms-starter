@@ -1,4 +1,5 @@
 import Sections from '@/components/cms/Sections';
+import SectionContainer from '@/components/layout/SectionContainer';
 import { executeQuery } from '@/lib/datocms/executeQuery';
 import { generateMetadataFn } from '@/lib/datocms/generateMetadataFn';
 import { HOME_SLUG } from '@/lib/datocms/gqlUrlBuilder/page';
@@ -67,7 +68,9 @@ export default async function Page({ params }: PageProps) {
 
   return (
     <>
-      <h1>{page.title}</h1>
+      <SectionContainer className="padding-vertical-large">
+        <h1>{page.title}</h1>
+      </SectionContainer>
       <Sections data={page.sections} locale={toSiteLocale(locale)} />
     </>
   );

@@ -1,3 +1,4 @@
+import '@/components/blocks/Link/index.css';
 import { PageUrlFragment, buildUrlForPage } from '@/lib/datocms/gqlUrlBuilder/page';
 import { type FragmentOf, graphql, readFragment } from '@/lib/datocms/graphql';
 import type { SiteLocale } from '@/lib/i18n/locales';
@@ -45,6 +46,7 @@ export default function Link({ data, locale }: Props) {
 
   return (
     <NextLink
+      className="cms-link"
       href={href}
       {...(openInNewTab ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
       data-datocms-content-link-boundary

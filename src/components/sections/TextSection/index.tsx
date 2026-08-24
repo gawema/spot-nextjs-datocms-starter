@@ -1,4 +1,5 @@
 import ImageBlock from '@/components/blocks/ImageBlock';
+import SectionContainer from '@/components/layout/SectionContainer';
 import ImageGalleryBlock from '@/components/blocks/ImageGalleryBlock';
 import { Text } from '@/components/cms/Text';
 import PageInline from '@/components/cms/inlineRecords/PageInline';
@@ -7,6 +8,8 @@ import { TextSectionFragment } from '@/components/sections/TextSection/fragment'
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import type { SiteLocale } from '@/lib/i18n/locales';
 import dynamic from 'next/dynamic';
+
+import './index.css';
 
 /*
  * Deferred out of the initial bundle: the video player is heavy and most pages
@@ -24,8 +27,8 @@ export default function TextSection({ data, locale }: Props) {
   const { heading, body } = readFragment(TextSectionFragment, data);
 
   return (
-    <section>
-      {heading ? <h2>{heading}</h2> : null}
+    <SectionContainer className="padding-vertical-main">
+      {heading ? <h2 className="text-section__heading">{heading}</h2> : null}
       <Text
         data={body}
         renderBlock={({ record }) => {
@@ -61,6 +64,6 @@ export default function TextSection({ data, locale }: Props) {
           }
         }}
       />
-    </section>
+    </SectionContainer>
   );
 }

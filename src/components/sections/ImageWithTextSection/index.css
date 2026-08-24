@@ -1,0 +1,33 @@
+.image-with-text {
+  display: grid;
+  gap: var(--spacing-space-large);
+}
+
+.image-with-text__media {
+  margin-block-end: 0;
+}
+
+.image-with-text__media img {
+  border-radius: var(--corner-radius-medium);
+}
+
+.image-with-text__copy {
+  align-content: center;
+  display: grid;
+  gap: var(--spacing-space-medium);
+  justify-items: start;
+}
+
+/* --bp-md: two columns once there is room for a real text measure beside the
+ * image. Media queries need the literal, custom properties do not work here. */
+@media (min-width: 900px) {
+  .image-with-text {
+    align-items: center;
+    gap: var(--spacing-space-extra-large);
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .image-with-text[data-inverted] .image-with-text__media {
+    order: 2;
+  }
+}

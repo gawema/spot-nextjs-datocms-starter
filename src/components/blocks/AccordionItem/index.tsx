@@ -1,3 +1,4 @@
+import '@/components/blocks/AccordionItem/index.css';
 import { Text } from '@/components/cms/Text';
 import PageInline, { PageInlineFragment } from '@/components/cms/inlineRecords/PageInline';
 import PageLink, { PageLinkFragment } from '@/components/cms/linkToRecords/PageLink';
@@ -41,31 +42,33 @@ export default function AccordionItem({ data, locale }: Props) {
   const { heading, body } = readFragment(AccordionItemFragment, data);
 
   return (
-    <details>
-      <summary>{heading}</summary>
-      <Text
-        data={body}
-        renderInlineRecord={({ record }) => {
-          switch (record.__typename) {
-            case 'PageRecord':
-              return <PageInline record={record} locale={locale} />;
-            default:
-              return null;
-          }
-        }}
-        renderLinkToRecord={({ transformedMeta, record, children }) => {
-          switch (record.__typename) {
-            case 'PageRecord':
-              return (
-                <PageLink record={record} transformedMeta={transformedMeta} locale={locale}>
-                  {children}
-                </PageLink>
-              );
-            default:
-              return null;
-          }
-        }}
-      />
+    <details className="accordion-item">
+      <summary className="accordion-item__summary">{heading}</summary>
+      <div className="accordion-item__body">
+        <Text
+          data={body}
+          renderInlineRecord={({ record }) => {
+            switch (record.__typename) {
+              case 'PageRecord':
+                return <PageInline record={record} locale={locale} />;
+              default:
+                return null;
+            }
+          }}
+          renderLinkToRecord={({ transformedMeta, record, children }) => {
+            switch (record.__typename) {
+              case 'PageRecord':
+                return (
+                  <PageLink record={record} transformedMeta={transformedMeta} locale={locale}>
+                    {children}
+                  </PageLink>
+                );
+              default:
+                return null;
+            }
+          }}
+        />
+      </div>
     </details>
   );
 }

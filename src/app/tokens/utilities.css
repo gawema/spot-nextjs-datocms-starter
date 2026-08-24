@@ -24,13 +24,6 @@
     padding-block: var(--padding-vertical-xl);
   }
 
-  /* Sections stacked with one gap, instead of each one owning a margin. */
-  .section-stack {
-    display: flex;
-    flex-direction: column;
-    gap: var(--section-stack-gap);
-  }
-
   .visually-hidden {
     border: 0;
     clip-path: inset(50%);

@@ -1,0 +1,4 @@
+.text-section__heading {
+  margin-block-end: var(--spacing-space-large);
+  max-width: 40rem;
+}

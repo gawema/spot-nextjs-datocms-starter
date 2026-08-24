@@ -1,0 +1,13 @@
+.section-container {
+  padding-inline: var(--padding-horizontal-padding-global);
+}
+
+.section-container__inner {
+  margin-inline: auto;
+  max-width: 72rem;
+}
+
+/* Prose wants a shorter line than a two-column layout does. */
+.section-container__inner :is(p, ul, ol, blockquote) {
+  max-width: 40rem;
+}

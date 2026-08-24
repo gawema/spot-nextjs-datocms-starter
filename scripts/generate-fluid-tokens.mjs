@@ -76,14 +76,7 @@ for (const token of FLUID_TOKENS) {
   lines.push(`    ${token.name}: ${fluidClamp(token.minPx, token.maxPx)};${comment}`);
 }
 
-lines.push(
-  '',
-  '    /* The gap between two sections tracks the largest vertical rhythm step. */',
-  '    --section-stack-gap: var(--padding-vertical-xl);',
-  '  }',
-  '}',
-  '',
-);
+lines.push('  }', '}', '');
 
 writeFileSync(OUT, lines.join('\n'), 'utf8');
 console.log(`Wrote ${FLUID_TOKENS.length} fluid tokens to ${OUT}`);
