@@ -3,7 +3,7 @@ import { executeQuery } from '@/lib/datocms/executeQuery';
 import { generateMetadataFn } from '@/lib/datocms/generateMetadataFn';
 import { HOME_SLUG } from '@/lib/datocms/gqlUrlBuilder/page';
 import type { ResultOf, VariablesOf } from '@/lib/datocms/graphql';
-import { type SiteLocale, isSupportedLocale } from '@/lib/i18n/locales';
+import { toSiteLocale } from '@/lib/i18n/params';
 import { PageQuery } from '@/lib/query/pageQuery';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
@@ -20,19 +20,6 @@ import { notFound } from 'next/navigation';
 type PageProps = {
   params: Promise<{ locale: string; slug?: string[] }>;
 };
-
-/**
- * The layout above already rejects unknown locales; this narrows `string` to
- * `SiteLocale` for the query variables without a cast, since `notFound()`
- * returns `never`.
- */
-function toSiteLocale(locale: string): SiteLocale {
-  if (!isSupportedLocale(locale)) {
-    notFound();
-  }
-
-  return locale;
-}
 
 /**
  * `/` serves the record whose slug is `home`. Asking for `/home` explicitly is a

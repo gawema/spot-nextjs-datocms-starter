@@ -1,0 +1,100 @@
+/* Layout for the design-system reference pages. Not part of the site's CSS. */
+
+.styleguide {
+  margin-inline: auto;
+  max-width: 60rem;
+}
+
+.styleguide__nav {
+  border-block-end: 1px solid var(--bg-border);
+  display: flex;
+  gap: var(--spacing-space-medium);
+  margin-block-end: var(--spacing-space-extra-large);
+  padding-block-end: var(--spacing-space-small);
+}
+
+.styleguide h1 {
+  margin-block-end: var(--spacing-space-large);
+}
+
+.styleguide section {
+  margin-block-end: var(--padding-vertical-main);
+}
+
+.styleguide h2 {
+  border-block-end: 1px solid var(--bg-border);
+  margin-block-end: var(--spacing-space-large);
+  padding-block-end: var(--spacing-space-extra-small);
+}
+
+/* One row per token: the name and value on the left, the specimen on the right. */
+.styleguide-row {
+  align-items: baseline;
+  border-block-end: 1px dashed var(--bg-border);
+  display: grid;
+  gap: var(--spacing-space-medium);
+  grid-template-columns: minmax(0, 16rem) minmax(0, 1fr);
+  padding-block: var(--spacing-space-medium);
+}
+
+.styleguide-row__meta {
+  color: var(--text-muted);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-text-small);
+  line-height: var(--line-height-text-small);
+}
+
+.styleguide-row__meta span {
+  display: block;
+}
+
+.styleguide-specimen--display {
+  font-size: var(--font-size-display);
+  font-weight: var(--font-weight-display);
+  letter-spacing: var(--letter-spacing-display);
+  line-height: var(--line-height-display);
+}
+
+.styleguide-bar {
+  background: var(--bg-accent);
+  border-radius: var(--corner-radius-small);
+  height: 1rem;
+}
+
+.styleguide-block {
+  background: var(--bg-accent);
+  border-radius: var(--corner-radius-small);
+  width: 4rem;
+}
+
+.styleguide-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-space-medium);
+}
+
+.styleguide-swatch {
+  align-items: end;
+  border: 1px solid var(--bg-border);
+  color: var(--text-muted);
+  display: flex;
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-text-small);
+  height: 5rem;
+  padding: var(--spacing-space-extra-small);
+  width: 8rem;
+}
+
+.styleguide-samples {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-space-medium);
+}
+
+.styleguide-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-medium);
+  max-width: 24rem;
+}
