@@ -1,26 +1,24 @@
-import Sections from '@/components/cms/Sections';
-import SectionContainer from '@/components/layout/SectionContainer';
-import { executeQuery } from '@/lib/datocms/executeQuery';
-import { generateMetadataFn } from '@/lib/datocms/generateMetadataFn';
 import { HOME_SLUG } from '@/lib/datocms/gqlUrlBuilder/page';
-import type { ResultOf, VariablesOf } from '@/lib/datocms/graphql';
+import { generatePageComponentAndMetadataFn } from '@/lib/datocms/realtime/generatePageComponentAndMetadataFn';
 import { toSiteLocale } from '@/lib/i18n/params';
 import { PageQuery } from '@/lib/query/pageQuery';
-import { draftMode } from 'next/headers';
+import dynamic from 'next/dynamic';
 import { notFound } from 'next/navigation';
+import Content, { type PageProps } from './Content';
 
 /**
  * Every page record is served from here, the home page included: an optional
  * catch-all means one route file instead of one per depth.
  *
- * Caching behaviour is inherited from `executeQuery()`: the route is rendered
- * per request because of `draftMode()`, but the GraphQL result is cached under
- * the 'datocms' tag and invalidated by the CMS webhook.
+ * With draft mode off, the published content is rendered on the server and the
+ * GraphQL result is cached under the 'datocms' tag until the CMS webhook
+ * invalidates it, so regular visitors never hit DatoCMS. With draft mode on,
+ * the route renders the realtime client component instead, and edits appear
+ * without a reload.
+ *
+ * @see src/lib/datocms/executeQuery.ts for the caching details
+ * @see src/app/api/invalidate-cache/route.tsx for the webhook
  */
-
-type PageProps = {
-  params: Promise<{ locale: string; slug?: string[] }>;
-};
 
 /**
  * `/` serves the record whose slug is `home`. Asking for `/home` explicitly is a
@@ -40,38 +38,16 @@ function toSlug(segments: string[] | undefined): string {
   return slug;
 }
 
-export const generateMetadata = generateMetadataFn<
-  PageProps,
-  ResultOf<typeof PageQuery>,
-  VariablesOf<typeof PageQuery>
->({
+const { generateMetadataFn, Page } = generatePageComponentAndMetadataFn({
   query: PageQuery,
-  pickSeoMetaTags: (data) => data.page?._seoMetaTags,
-  buildQueryVariables: async ({ params }) => {
+  buildQueryVariables: async ({ params }: PageProps) => {
     const { locale, slug } = await params;
     return { slug: toSlug(slug), locale: toSiteLocale(locale) };
   },
+  pickSeoMetaTags: (data) => data.page?._seoMetaTags,
+  contentComponent: Content,
+  realtimeComponent: dynamic(() => import('./RealTime')),
 });
 
-export default async function Page({ params }: PageProps) {
-  const { locale, slug } = await params;
-  const { isEnabled: isDraftModeEnabled } = await draftMode();
-
-  const { page } = await executeQuery(PageQuery, {
-    variables: { slug: toSlug(slug), locale: toSiteLocale(locale) },
-    includeDrafts: isDraftModeEnabled,
-  });
-
-  if (!page) {
-    notFound();
-  }
-
-  return (
-    <>
-      <SectionContainer className="padding-vertical-large">
-        <h1>{page.title}</h1>
-      </SectionContainer>
-      <Sections data={page.sections} locale={toSiteLocale(locale)} />
-    </>
-  );
-}
+export const generateMetadata = generateMetadataFn;
+export default Page;
