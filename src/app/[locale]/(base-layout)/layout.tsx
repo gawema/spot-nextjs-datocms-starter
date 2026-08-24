@@ -1,20 +1,29 @@
 import ContentLink from '@/components/cms/ContentLink';
-import DraftModeToggler from '@/components/dev/DraftModeToggler';
+import SiteHeader from '@/components/layout/SiteHeader';
 import { TagFragment } from '@/lib/datocms/commonFragments';
 import { executeQuery } from '@/lib/datocms/executeQuery';
 import { graphql } from '@/lib/datocms/graphql';
+import { toSiteLocale } from '@/lib/i18n/params';
 import { draftMode } from 'next/headers';
 import { toNextMetadata } from 'react-datocms/seo';
 
 import '../../global.css';
 import { Metadata } from 'next';
 
+/*
+ * The site name lives in the project's SEO preferences on DatoCMS, so the
+ * header reads it from there instead of from a constant no client project would
+ * think to change.
+ */
 const query = graphql(
   /* GraphQL */ `
-    query query {
+    query LayoutQuery($locale: SiteLocale!) {
       _site {
         faviconMetaTags {
           ...TagFragment
+        }
+        globalSeo(locale: $locale, fallbackLocales: [de]) {
+          siteName
         }
       }
     }
@@ -22,18 +31,31 @@ const query = graphql(
   [TagFragment],
 );
 
-export async function generateMetadata(): Promise<Metadata> {
+type LayoutProps = {
+  children: React.ReactNode;
+  params: Promise<{ locale: string }>;
+};
+
+export async function generateMetadata({ params }: LayoutProps): Promise<Metadata> {
+  const { locale } = await params;
   const { isEnabled: isDraftModeEnabled } = await draftMode();
-  const data = await executeQuery(query, { includeDrafts: isDraftModeEnabled });
+
+  const data = await executeQuery(query, {
+    variables: { locale: toSiteLocale(locale) },
+    includeDrafts: isDraftModeEnabled,
+  });
+
   return toNextMetadata(data._site.faviconMetaTags);
 }
 
-export default async function BaseLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default async function BaseLayout({ children, params }: Readonly<LayoutProps>) {
+  const { locale } = await params;
   const { isEnabled: isDraftModeEnabled } = await draftMode();
+
+  const { _site } = await executeQuery(query, {
+    variables: { locale: toSiteLocale(locale) },
+    includeDrafts: isDraftModeEnabled,
+  });
 
   return (
     <>
@@ -48,13 +70,11 @@ export default async function BaseLayout({
         is only included in draft content responses (see executeQuery.ts).
       */}
       {isDraftModeEnabled && <ContentLink />}
-      <header>
-        <h1>DatoCMS + Next.js Starter Kit</h1>
-        <nav>
-          <a href="https://www.datocms.com/docs/next-js">📚 Full Integration Guide</a>
-        </nav>
-        <DraftModeToggler draftModeEnabled={isDraftModeEnabled} />
-      </header>
+      <SiteHeader
+        siteName={_site.globalSeo?.siteName ?? null}
+        locale={toSiteLocale(locale)}
+        isDraftModeEnabled={isDraftModeEnabled}
+      />
       <main>{children}</main>
     </>
   );
