@@ -1,6 +1,7 @@
 import '@/components/layout/SiteHeader/index.css';
 import Link from '@/components/blocks/Link';
 import DraftModeToggler from '@/components/dev/DraftModeToggler';
+import MobileMenu from '@/components/layout/SiteHeader/MobileMenu';
 import { SiteHeaderFragment } from '@/components/layout/SiteHeader/fragment';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { SUPPORTED_LOCALES, type SiteLocale, localizePathname } from '@/lib/i18n/locales';
@@ -15,10 +16,10 @@ import NextLink from 'next/link';
  * rather than to the translation of the current page: the translated slug is
  * known by the page route, not by a layout.
  *
- * The second menu level opens on hover and on keyboard focus, with no
- * JavaScript. On touch there is nothing to hover, so tapping a parent entry
- * follows its link: a real mobile menu is a client component, and a project that
- * needs one builds it here.
+ * Below the `sm` breakpoint the navigation lives inside a panel that a toggle
+ * opens; from there up the same markup lays out as a row, and second levels open
+ * on hover and on keyboard focus. Only the toggle is a client component, so the
+ * menu itself is still rendered on the server.
  */
 
 type Props = {
@@ -52,25 +53,27 @@ export default function SiteHeader({ data, siteName, locale, isDraftModeEnabled 
         </NextLink>
 
         {layout && layout.navigation.length > 0 ? (
-          <nav className="site-nav" aria-label="Main">
-            <ul className="site-nav__list">
-              {layout.navigation.map((item) => (
-                <li className="site-nav__item" key={item.id}>
-                  <Link data={item.link} locale={locale} className="site-nav__link" />
+          <MobileMenu label="Menu">
+            <nav className="site-nav" aria-label="Main">
+              <ul className="site-nav__list">
+                {layout.navigation.map((item) => (
+                  <li className="site-nav__item" key={item.id}>
+                    <Link data={item.link} locale={locale} className="site-nav__link" />
 
-                  {item.dropdown.length > 0 ? (
-                    <ul className="site-nav__dropdown">
-                      {item.dropdown.map((child) => (
-                        <li key={child.id}>
-                          <Link data={child} locale={locale} className="site-nav__link" />
-                        </li>
-                      ))}
-                    </ul>
-                  ) : null}
-                </li>
-              ))}
-            </ul>
-          </nav>
+                    {item.dropdown.length > 0 ? (
+                      <ul className="site-nav__dropdown">
+                        {item.dropdown.map((child) => (
+                          <li key={child.id}>
+                            <Link data={child} locale={locale} className="site-nav__link" />
+                          </li>
+                        ))}
+                      </ul>
+                    ) : null}
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </MobileMenu>
         ) : null}
 
         <div className="site-header__end">
