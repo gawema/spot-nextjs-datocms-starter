@@ -1,0 +1,43 @@
+@layer base {
+  /*
+   * The few helpers that earn a class: vertical rhythm, page gutter and the
+   * accessible-hiding pattern. Everything else belongs to a component.
+   */
+
+  .padding-horizontal-padding-global {
+    padding-inline: var(--padding-horizontal-padding-global);
+  }
+
+  .padding-vertical-small {
+    padding-block: var(--padding-vertical-small);
+  }
+
+  .padding-vertical-main {
+    padding-block: var(--padding-vertical-main);
+  }
+
+  .padding-vertical-large {
+    padding-block: var(--padding-vertical-large);
+  }
+
+  .padding-vertical-xl {
+    padding-block: var(--padding-vertical-xl);
+  }
+
+  /* Sections stacked with one gap, instead of each one owning a margin. */
+  .section-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--section-stack-gap);
+  }
+
+  .visually-hidden {
+    border: 0;
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+  }
+}

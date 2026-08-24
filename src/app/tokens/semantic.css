@@ -1,0 +1,28 @@
+@layer base {
+  /*
+   * Semantic layer: what a colour is for, not what it is. Components and base
+   * styles read these, never the raw ramps, so re-theming is a matter of
+   * repointing a handful of roles.
+   *
+   * The names are the ones the DatoCMS starter kit already used, so its
+   * remaining styles keep working unchanged.
+   */
+  :root {
+    --text-body: var(--color-neutral-500);
+    --text-muted: var(--color-neutral-400);
+    /* Text sitting on --bg-accent. */
+    --text-accent: var(--color-absolute-white);
+    --text-link: var(--color-primary-300);
+
+    --bg-page: var(--color-neutral-100);
+    /* Raised surfaces: code blocks, quotes, table headers. */
+    --bg-subtle: var(--color-neutral-200);
+    --bg-border: var(--color-neutral-300);
+    /* Buttons, pills. */
+    --bg-accent: var(--color-primary-300);
+    --bg-accent-hover: var(--color-primary-400);
+    --bg-highlight: var(--color-primary-100);
+
+    --focus-ring: var(--color-primary-300);
+  }
+}

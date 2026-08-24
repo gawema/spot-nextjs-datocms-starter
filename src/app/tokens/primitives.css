@@ -1,0 +1,114 @@
+@layer base {
+  /*
+   * Primitives: the raw values. Everything else in the token layer points at
+   * these, so a client project replaces the values here and keeps the names.
+   *
+   * Fluid sizes (headings, vertical rhythm, gutters) live in fluid.css, which
+   * is generated. Colour roles (text, surfaces, borders) live in semantic.css.
+   */
+  :root {
+    /*
+     * System font stacks, on purpose: the starter ships no webfont, so nothing
+     * blocks the first render and no project inherits a typeface it has to
+     * undo. Add the real families here, in front of the fallbacks.
+     */
+    --font-family-primary:
+      system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --font-family-secondary: Georgia, Cambria, 'Times New Roman', Times, serif;
+    --font-family-mono:
+      ui-monospace, Menlo, Consolas, Monaco, 'Liberation Mono', 'Courier New', monospace;
+
+    /* Headings: sizes are fluid, everything else about them is not. */
+    --font-weight-display: 600;
+    --line-height-display: 1.05;
+    --letter-spacing-display: -0.02em;
+
+    --font-weight-h1: 600;
+    --line-height-h1: 1.1;
+    --letter-spacing-h1: -0.015em;
+
+    --font-weight-h2: 600;
+    --line-height-h2: 1.15;
+    --letter-spacing-h2: -0.01em;
+
+    --font-weight-h3: 600;
+    --line-height-h3: 1.2;
+    --letter-spacing-h3: 0;
+
+    --font-weight-h4: 600;
+    --line-height-h4: 1.25;
+    --letter-spacing-h4: 0;
+
+    --font-weight-h5: 600;
+    --line-height-h5: 1.3;
+    --letter-spacing-h5: 0;
+
+    /* Body copy stays static: only headings and rhythm scale with the viewport. */
+    --font-size-text-large: 1.25rem;
+    --font-weight-text-large: 400;
+    --line-height-text-large: 1.45;
+    --letter-spacing-text-large: 0;
+
+    --font-size-text-base: 1rem;
+    --font-weight-text-base: 400;
+    --line-height-text-base: 1.6;
+    --letter-spacing-text-base: 0;
+
+    --font-size-text-small: 0.875rem;
+    --font-weight-text-small: 400;
+    --line-height-text-small: 1.5;
+    --letter-spacing-text-small: 0;
+
+    --font-size-textbutton-base: 1rem;
+    --font-weight-textbutton-base: 500;
+    --line-height-textbutton-base: 1.5;
+    --letter-spacing-textbutton-base: 0;
+
+    --font-size-textbutton-small: 0.875rem;
+    --font-weight-textbutton-small: 500;
+    --line-height-textbutton-small: 1.5;
+    --letter-spacing-textbutton-small: 0;
+
+    /* Micro spacing: inside a component. Between sections, use the fluid steps. */
+    --spacing-space-none: 0;
+    --spacing-space-extra-small: 0.25rem;
+    --spacing-space-small: 0.5rem;
+    --spacing-space-medium: 1rem;
+    --spacing-space-large: 1.5rem;
+    --spacing-space-extra-large: 2rem;
+    --spacing-space-2-extra-large: 3rem;
+    --spacing-space-3-extra-large: 4rem;
+    --spacing-space-4-extra-large: 8rem;
+
+    --padding-vertical-none: 0;
+    --site-header-height-mobile: 4rem;
+    --site-header-height: 4.5rem;
+    --viewport-grid-columns: 12;
+
+    /*
+     * Placeholder palette: a neutral ramp plus one accent hue. Both ramps go
+     * light to dark, so a project can swap the hex values without rethinking
+     * which step means what.
+     */
+    --color-absolute-white: #ffffff;
+    --color-absolute-black: #000000;
+
+    --color-neutral-100: #ffffff;
+    --color-neutral-200: #f4f4f5;
+    --color-neutral-300: #d4d4d8;
+    --color-neutral-400: #71717a;
+    --color-neutral-500: #27272a;
+    --color-neutral-600: #18181b;
+
+    --color-primary-100: #e8edfb;
+    --color-primary-200: #7d9ae8;
+    --color-primary-300: #2f57c4;
+    --color-primary-400: #1c3576;
+
+    --corner-radius-none: 0;
+    --corner-radius-small: 0.25rem;
+    --corner-radius-medium: 0.5rem;
+    --corner-radius-large: 1rem;
+    --corner-radius-full: 624.9375rem;
+  }
+}

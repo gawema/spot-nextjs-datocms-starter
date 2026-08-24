@@ -1,0 +1,120 @@
+/*
+ * highlight.js theme (summerfruit-light), kept from the DatoCMS starter kit.
+ *
+ * It lives apart from the token layer on purpose: these are the colours of a
+ * third-party syntax highlighter consumed by components/cms/Code, not part of
+ * the design system, and a project that drops code blocks drops this file.
+ */
+@layer base {
+  :root {
+    /* highlight.js theme (summerfruit-light) */
+    --hljs-text: #101010;
+    --hljs-selection: #d0d0d0;
+    --hljs-comment: #b0b0b0;
+    --hljs-tag: #000000;
+    --hljs-variable: #ff0086;
+    --hljs-number: #fd8900;
+    --hljs-title: #aba800;
+    --hljs-string: #00c918;
+    --hljs-builtin: #1faaaa;
+    --hljs-function: #3777e6;
+    --hljs-keyword: #ad00a1;
+    --hljs-meta: #cc6633;
+  }
+
+  pre code.hljs {
+    display: block;
+    overflow-x: auto;
+    padding: 1em;
+  }
+  code.hljs {
+    padding: 3px 5px;
+  }
+  .hljs {
+    color: var(--hljs-text);
+    background: var(--bg-subtle);
+  }
+  .hljs::selection,
+  .hljs ::selection {
+    background-color: var(--hljs-selection);
+    color: var(--hljs-text);
+  }
+  .hljs-comment {
+    color: var(--hljs-comment);
+  }
+  .hljs-tag {
+    color: var(--hljs-tag);
+  }
+  .hljs-subst,
+  .hljs-punctuation,
+  .hljs-operator {
+    color: var(--hljs-text);
+  }
+  .hljs-operator {
+    opacity: 0.7;
+  }
+  .hljs-bullet,
+  .hljs-variable,
+  .hljs-template-variable,
+  .hljs-selector-tag,
+  .hljs-name,
+  .hljs-deletion {
+    color: var(--hljs-variable);
+  }
+  .hljs-symbol,
+  .hljs-number,
+  .hljs-link,
+  .hljs-attr,
+  .hljs-variable.constant_,
+  .hljs-literal {
+    color: var(--hljs-number);
+  }
+  .hljs-title,
+  .hljs-class .hljs-title,
+  .hljs-title.class_ {
+    color: var(--hljs-title);
+  }
+  .hljs-strong {
+    font-weight: bold;
+    color: var(--hljs-title);
+  }
+  .hljs-code,
+  .hljs-addition,
+  .hljs-title.class_.inherited__,
+  .hljs-string {
+    color: var(--hljs-string);
+  }
+  .hljs-built_in,
+  .hljs-doctag,
+  .hljs-quote,
+  .hljs-keyword.hljs-atrule,
+  .hljs-regexp {
+    color: var(--hljs-builtin);
+  }
+  .hljs-function .hljs-title,
+  .hljs-attribute,
+  .ruby .hljs-property,
+  .hljs-title.function_,
+  .hljs-section {
+    color: var(--hljs-function);
+  }
+  .hljs-type,
+  .hljs-template-tag,
+  .diff .hljs-meta,
+  .hljs-keyword {
+    color: var(--hljs-keyword);
+  }
+  .hljs-emphasis {
+    color: var(--hljs-keyword);
+    font-style: italic;
+  }
+  .hljs-meta,
+  .hljs-meta .hljs-keyword,
+  .hljs-meta .hljs-string {
+    color: var(--hljs-meta);
+  }
+  .hljs-meta .hljs-keyword,
+  .hljs-meta-keyword {
+    font-weight: bold;
+  }
+}

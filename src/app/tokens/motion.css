@@ -1,0 +1,13 @@
+@layer base {
+  /*
+   * `--motion-ease-out` is the house curve for anything entering or settling;
+   * `--motion-ease-inout` is for travel and swaps, where both ends matter.
+   */
+  :root {
+    --motion-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --motion-ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+
+    --motion-duration-fast: 150ms;
+    --motion-duration-base: 300ms;
+  }
+}
