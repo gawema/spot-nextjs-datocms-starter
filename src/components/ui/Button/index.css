@@ -1,0 +1,76 @@
+.ui-button {
+  align-items: center;
+  border: 1px solid transparent;
+  border-radius: var(--corner-radius-full);
+  cursor: pointer;
+  display: inline-flex;
+  font-family: var(--font-family-primary);
+  gap: var(--spacing-space-extra-small);
+  justify-content: center;
+  transition:
+    background-color var(--motion-duration-fast) var(--motion-ease-out),
+    border-color var(--motion-duration-fast) var(--motion-ease-out);
+}
+
+.ui-button--base {
+  font-size: var(--font-size-textbutton-base);
+  font-weight: var(--font-weight-textbutton-base);
+  letter-spacing: var(--letter-spacing-textbutton-base);
+  line-height: var(--line-height-textbutton-base);
+  padding: var(--spacing-space-small) var(--spacing-space-medium);
+}
+
+.ui-button--small {
+  font-size: var(--font-size-textbutton-small);
+  font-weight: var(--font-weight-textbutton-small);
+  letter-spacing: var(--letter-spacing-textbutton-small);
+  line-height: var(--line-height-textbutton-small);
+  padding: var(--spacing-space-extra-small) var(--spacing-space-small);
+}
+
+.ui-button--fill {
+  background: var(--bg-accent);
+  color: var(--text-accent);
+}
+
+.ui-button--fill:hover:not(:disabled) {
+  background: var(--bg-accent-hover);
+}
+
+.ui-button--outline {
+  border-color: var(--bg-border);
+  color: var(--text-body);
+}
+
+.ui-button--outline:hover:not(:disabled) {
+  border-color: var(--text-body);
+}
+
+.ui-button--ghost {
+  color: var(--text-body);
+}
+
+.ui-button--ghost:hover:not(:disabled) {
+  background: var(--bg-subtle);
+}
+
+.ui-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Square, so the icon sits in the middle whatever the size step. */
+.ui-button--icon-only {
+  aspect-ratio: 1;
+  padding: var(--spacing-space-small);
+}
+
+.ui-button__icon {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.ui-button__icon svg {
+  height: 1em;
+  width: 1em;
+}
