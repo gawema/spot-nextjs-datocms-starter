@@ -12,7 +12,7 @@ import type { ContentComponentType } from './generatePageComponent';
  * updates on content changes, and re-renders the `contentComponent`.
  */
 export function generateRealtimeComponent<PageProps, Result, Variables>({
-  query,
+  query: _query,
   contentComponent: ContentComponent,
 }: GenerateRealtimeComponentOptions<PageProps, Result, Variables>) {
   const RealtimeComponent: RealtimeComponentType<PageProps, Result, Variables> = ({

@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: Lint and types
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      # --ignore-scripts skips `prepare`, which would regenerate schema.graphql and
+      # cma-types.ts against the live CMS. CI checks the code against the committed
+      # schema instead, so it stays green when DatoCMS is unreachable.
+      - run: npm ci --ignore-scripts
+      - run: npm run lint
+      - run: npx tsc --noEmit
+      # The two token CSS files are generated. Re-running the generators must leave
+      # the tree clean, otherwise someone edited the output instead of the source.
+      - run: npm run generate-fluid-tokens && npm run generate-breakpoint-tokens
+      - run: git diff --exit-code --stat src/app/tokens
+
+  schema-drift:
+    name: Schema drift
+    runs-on: ubuntu-latest
+    env:
+      CDA_TOKEN: ${{ secrets.DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - if: env.CDA_TOKEN == ''
+        run: echo "::notice::Skipped, DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN secret is not set"
+      - if: env.CDA_TOKEN != ''
+        run: npm ci --ignore-scripts
+      # Regenerates the schema from the live CMS and fails if it differs from the
+      # committed one, so a field removed in DatoCMS surfaces here instead of as a
+      # broken page in production.
+      - if: env.CDA_TOKEN != ''
+        run: |
+          npx gql.tada generate schema https://graphql.datocms.com \
+            --header "X-Exclude-Invalid: true" \
+            --header "Authorization: $CDA_TOKEN"
+      - if: env.CDA_TOKEN != ''
+        run: git diff --exit-code --stat schema.graphql
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    env:
+      DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN: ${{ secrets.DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN }}
+      DATOCMS_DRAFT_CONTENT_CDA_TOKEN: ${{ secrets.DATOCMS_DRAFT_CONTENT_CDA_TOKEN }}
+      SECRET_API_TOKEN: ci-placeholder
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      # The layout queries DatoCMS for the site name at build time, so the build
+      # only runs once the CDA token is available as a repository secret.
+      - if: env.DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN == ''
+        run: echo "::notice::Skipped, DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN secret is not set"
+      - if: env.DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN != ''
+        run: npm ci --ignore-scripts
+      - if: env.DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN != ''
+        run: npm run build

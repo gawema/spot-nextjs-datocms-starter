@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint && prettier --check .",
+    "lint": "eslint . && prettier --check .",
     "generate-schema": "dotenv -c -- bash -c 'gql.tada generate schema https://graphql.datocms.com --header \"X-Exclude-Invalid: true\" --header \"Authorization: $DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN\" && gql.tada generate-output'",
     "generate-cma-types": "dotenv -c -- bash -c 'npx datocms schema:generate src/lib/datocms/cma-types.ts --api-token $DATOCMS_CMA_TOKEN'",
     "generate-fluid-tokens": "node scripts/generate-fluid-tokens.mjs && prettier --write src/app/tokens/fluid.css",
@@ -41,6 +41,8 @@
     "@types/react-dom": "^19",
     "datocms": "^4.0.26",
     "dotenv-cli": "^11.0.0",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.3.2",
     "prettier": "3.7.4",
     "simple-git-hooks": "^2.13.1",
     "typescript": "^5.9.3"
