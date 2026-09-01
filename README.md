@@ -43,6 +43,15 @@ DatoCMS template project **SPOT Nextjs DatoCMS starter** (project id `225924`).
    still points at the old website, and set the project's locales. Then delete what the
    client does not need: deleting is cheaper and safer than generating.
 
+6. Fill the two singletons in the CMS: **Layout** (logo, navigation, footer) and
+   **Settings** (the interface wording, and the privacy client id once the site is
+   registered in `legal.spotagency.ch`). Both come seeded with the template's demo values.
+
+7. Invite the client with the **Editor** role, not as an admin. It can do everything to
+   content and assets and can edit the favicon, the global SEO defaults and the no-index
+   switch, but not the schema or the project settings. Check the role exists on the new
+   project: whether it survives the deploy-flow copy is not yet verified.
+
 ## Routing and locales
 
 Every page lives under `src/app/[locale]`. German is the default and is served unprefixed,
@@ -52,6 +61,9 @@ sniffing and no locale cookie, so a URL resolves the same way for every visitor.
 One route, `[[...slug]]`, serves every page record. The record whose slug is `home` is
 served at the site root, and `/home` answers 404 so a page never has two URLs. Slugs are
 localized, which is why `/seite-zwei` and `/en/page-two` are the same record.
+
+A dead URL renders `not-found.tsx` inside the site shell, header and footer included, with
+its wording taken from the CMS like the rest of the interface.
 
 Internal pages, excluded from search results: `/typography`, `/spacing`, `/ui`.
 
@@ -63,7 +75,12 @@ Three layers. Keep them apart in your head:
   in place unless you have to. Wrap them instead, so updates from the DatoCMS starter kit
   stay mergeable.
 - **SPOT layer**: locale routing, the design-token layer with its two generators, the UI
-  primitives and the styleguide pages, the section spine, `sitemap.ts` and `robots.ts`.
+  primitives and the styleguide pages, the section spine, `sitemap.ts` and `robots.ts`, and
+  the two singletons that frame every page. **Layout** feeds the header and the footer:
+  logo, a localized two-level navigation, footer text and links. **Settings** holds the
+  interface wording and the privacy ids, and mounts SPOT's consent tool, which is also what
+  starts Google Tag Manager once the visitor has accepted, so there is no GTM snippet
+  anywhere in the code.
 - **Example content**: three sections (text, image with text, accordion) and two nested
   blocks (link, accordion item). They are demonstrations of the convention. Copy one, then
   delete the ones the project does not use, in the CMS and in the code.
@@ -80,6 +97,13 @@ Three layers. Keep them apart in your head:
   lines there, its own folder, and no query changes: every consumer selects
   `sections { ...SectionsFragment }`. The switch on `__typename` has an exhaustiveness
   check, so forgetting the renderer fails to compile instead of rendering nothing.
+- **Interface wording lives in the CMS, keys live in the code.** Components call
+  `t('t_menu')` as usual, and `src/lib/i18n/request.ts` feeds next-intl from the
+  `translations` field on Settings instead of from message files, so a client can reword a
+  button without a deploy. It costs no extra request: the query is cached under the
+  'datocms' tag like every other. A key with no value renders as the key itself, visibly
+  wrong rather than invisibly empty. Client components receive their strings as props, so
+  the message catalogue never reaches the browser bundle.
 - **Queries** live in `src/lib/query`, not inside route files, because a query always ends
   up with more than one consumer: the route, its metadata, and the client component that
   re-runs it for live draft updates.
