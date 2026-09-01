@@ -22,7 +22,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const languages = Object.fromEntries(
       locales.flatMap((locale) => {
         const slug = slugs.get(locale);
-        return slug ? [[locale, absoluteUrl(pagePathname(slug, locale))]] : [];
+        return slug
+          ? [[locale, absoluteUrl(pagePathname({ slug, isHome: page.isHome }, locale))]]
+          : [];
       }),
     );
 
@@ -35,7 +37,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
       return [
         {
-          url: absoluteUrl(pagePathname(slug, locale)),
+          url: absoluteUrl(pagePathname({ slug, isHome: page.isHome }, locale)),
           lastModified: page._updatedAt,
           alternates: { languages },
         },

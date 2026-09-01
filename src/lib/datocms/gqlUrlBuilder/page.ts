@@ -17,9 +17,10 @@ import { pagePathname } from '@/lib/routing/pagePath';
 export const PageUrlFragment = graphql(/* GraphQL */ `
   fragment PageUrlFragment on PageRecord {
     slug
+    isHome
   }
 `);
 
 export function buildUrlForPage(page: FragmentOf<typeof PageUrlFragment>, locale: SiteLocale) {
-  return pagePathname(readFragment(PageUrlFragment, page).slug, locale);
+  return pagePathname(readFragment(PageUrlFragment, page), locale);
 }

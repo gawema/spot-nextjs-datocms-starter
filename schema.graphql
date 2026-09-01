@@ -2743,6 +2743,7 @@ input PageModelFilter {
   _updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
   _locales: LocalesFilter
+  isHome: BooleanFilter
   seoAnalysis: JsonFilter
   seoSettingsSocial: SeoFilter
   slug: SlugFilter
@@ -2770,6 +2771,8 @@ enum PageModelOrderBy {
   _updatedAt_DESC
   _isValid_ASC
   _isValid_DESC
+  isHome_ASC
+  isHome_DESC
   title_ASC
   title_DESC
 }
@@ -2821,6 +2824,7 @@ type PageRecord implements RecordInterface {
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
   id: ItemId!
+  isHome: BooleanType!
   sections(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale

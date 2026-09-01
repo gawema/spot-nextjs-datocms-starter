@@ -9,6 +9,13 @@ import createNextIntlPlugin from 'next-intl/plugin';
 const withNextIntl = createNextIntlPlugin('./src/lib/i18n/request.ts');
 
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  /*
+   * `next build` and `next dev` both write to `.next` and overwrite each other's
+   * manifests, which leaves a running dev server answering 500. Set
+   * NEXT_DIST_DIR to build while one is up.
+   */
+  distDir: process.env.NEXT_DIST_DIR ?? '.next',
+};
 
 export default withNextIntl(nextConfig);

@@ -33,6 +33,7 @@ export const LayoutQuery = graphql(
       # Every page's slug in every language, so the locale switcher can send a
       # visitor to the translation of the page they are on.
       allPages(first: 100) {
+        isHome
         _allSlugLocales {
           locale
           value

@@ -23,29 +23,39 @@ import { usePathname } from 'next/navigation';
  * falls back to the home of the chosen language.
  */
 
-export type SlugsByLocale = Partial<Record<SiteLocale, string>>;
+export type PageAlternates = {
+  isHome: boolean;
+  slugs: Partial<Record<SiteLocale, string>>;
+};
 
 type Props = {
   label: string;
   locale: SiteLocale;
-  pages: SlugsByLocale[];
+  pages: PageAlternates[];
 };
 
 export default function LocaleSwitcher({ label, locale, pages }: Props) {
   const pathname = usePathname();
   const current = stripLocalePrefix(pathname).replace(/^\//, '');
 
-  const page = pages.find((slugs) => slugs[locale] === (current === '' ? 'home' : current));
+  const page =
+    current === ''
+      ? pages.find((candidate) => candidate.isHome)
+      : pages.find((candidate) => candidate.slugs[locale] === current);
 
   return (
     <nav className="locale-switcher" aria-label={label}>
       {SUPPORTED_LOCALES.map((supported) => {
-        const slug = page?.[supported];
+        const slug = page?.slugs[supported];
 
         return (
           <Link
             key={supported}
-            href={slug ? pagePathname(slug, supported) : localizePathname('/', supported)}
+            href={
+              page && slug
+                ? pagePathname({ slug, isHome: page.isHome }, supported)
+                : localizePathname('/', supported)
+            }
             hrefLang={supported}
             aria-current={supported === locale ? 'true' : undefined}
           >

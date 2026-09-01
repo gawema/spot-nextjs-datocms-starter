@@ -1,9 +1,7 @@
-import { HOME_SLUG } from '@/lib/routing/pagePath';
 import { generatePageComponentAndMetadataFn } from '@/lib/datocms/realtime/generatePageComponentAndMetadataFn';
 import { toSiteLocale } from '@/lib/i18n/params';
 import { PageQuery } from '@/lib/query/pageQuery';
 import dynamic from 'next/dynamic';
-import { notFound } from 'next/navigation';
 import Content, { type PageProps } from './Content';
 
 /**
@@ -21,28 +19,26 @@ import Content, { type PageProps } from './Content';
  */
 
 /**
- * `/` serves the record whose slug is `home`. Asking for `/home` explicitly is a
- * 404 rather than a second URL for the same page.
+ * The site root is the page flagged as the home, and every other URL is a slug.
+ * The home is excluded from the slug lookup, so its own slug is a 404 rather
+ * than a second URL for the same page.
+ *
+ * Identifying the home by a flag and not by a magic slug is deliberate: a slug
+ * is translatable, and an automatic translation of it once took the root down.
  */
-function toSlug(segments: string[] | undefined): string {
+function toFilter(segments: string[] | undefined) {
   if (!segments) {
-    return HOME_SLUG;
+    return { isHome: { eq: true } };
   }
 
-  const slug = segments.join('/');
-
-  if (slug === HOME_SLUG) {
-    notFound();
-  }
-
-  return slug;
+  return { slug: { eq: segments.join('/') }, isHome: { eq: false } };
 }
 
 const { generateMetadataFn, Page } = generatePageComponentAndMetadataFn({
   query: PageQuery,
   buildQueryVariables: async ({ params }: PageProps) => {
     const { locale, slug } = await params;
-    return { slug: toSlug(slug), locale: toSiteLocale(locale) };
+    return { filter: toFilter(slug), locale: toSiteLocale(locale) };
   },
   pickSeoMetaTags: (data) => data.page?._seoMetaTags,
   contentComponent: Content,

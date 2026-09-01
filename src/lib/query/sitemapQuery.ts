@@ -8,6 +8,7 @@ import { graphql } from '@/lib/datocms/graphql';
 export const SitemapQuery = graphql(/* GraphQL */ `
   query SitemapQuery {
     allPages(first: 100) {
+      isHome
       _locales
       _updatedAt
       _allSlugLocales {

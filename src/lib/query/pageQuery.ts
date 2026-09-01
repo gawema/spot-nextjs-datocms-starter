@@ -9,11 +9,14 @@ import { graphql } from '@/lib/datocms/graphql';
  *
  * `locale` is passed at the record level and applies to the whole subtree, so
  * every localized field below comes back in one language.
+ *
+ * The filter is a variable rather than a fixed shape because the site root is
+ * found by `isHome` and every other URL by its slug: one query, two ways in.
  */
 export const PageQuery = graphql(
   /* GraphQL */ `
-    query PageQuery($slug: String!, $locale: SiteLocale!) {
-      page(filter: { slug: { eq: $slug } }, locale: $locale) {
+    query PageQuery($filter: PageModelFilter!, $locale: SiteLocale!) {
+      page(filter: $filter, locale: $locale) {
         _seoMetaTags {
           ...TagFragment
         }

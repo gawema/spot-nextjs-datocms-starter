@@ -1,7 +1,7 @@
 import '@/components/layout/SiteHeader/index.css';
 import Link from '@/components/blocks/Link';
 import DraftModeToggler from '@/components/dev/DraftModeToggler';
-import LocaleSwitcher, { type SlugsByLocale } from '@/components/layout/LocaleSwitcher';
+import LocaleSwitcher, { type PageAlternates } from '@/components/layout/LocaleSwitcher';
 import MenuPanel from '@/components/layout/SiteHeader/MenuPanel';
 import { SiteHeaderFragment } from '@/components/layout/SiteHeader/fragment';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
@@ -29,7 +29,7 @@ type Props = {
   data: FragmentOf<typeof SiteHeaderFragment> | null;
   siteName: string | null;
   locale: SiteLocale;
-  pages: SlugsByLocale[];
+  pages: PageAlternates[];
   isDraftModeEnabled: boolean;
 };
 

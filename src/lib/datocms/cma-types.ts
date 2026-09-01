@@ -116,17 +116,17 @@ export type Layout = ItemTypeDefinition<
     panel_position: {
       type: 'string';
     };
-    navigation: {
-      type: 'rich_text';
-      blocks: MenuItem;
-      localized: true;
+    panel_orientation: {
+      type: 'string';
     };
     social_links: {
       type: 'rich_text';
       blocks: Link;
     };
-    panel_orientation: {
-      type: 'string';
+    navigation: {
+      type: 'rich_text';
+      blocks: MenuItem;
+      localized: true;
     };
   }
 >;
@@ -181,6 +181,9 @@ export type Page = ItemTypeDefinition<
   EnvironmentSettings,
   'JdG722SGTSG_jEB1Jx-0XA',
   {
+    is_home: {
+      type: 'boolean';
+    };
     title: {
       type: 'string';
       localized: true;
