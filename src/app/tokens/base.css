@@ -44,7 +44,17 @@
   h4,
   h5,
   h6 {
+    color: var(--color-neutral-600);
     text-wrap: balance;
+  }
+
+  /* The page title, one step above the heading scale. */
+  .page-title {
+    font-size: var(--font-size-display);
+    font-weight: var(--font-weight-display);
+    letter-spacing: var(--letter-spacing-display);
+    line-height: var(--line-height-display);
+    max-width: 20ch;
   }
 
   h1 {
@@ -103,10 +113,15 @@
 
   a {
     color: var(--text-link);
+    text-underline-offset: 0.2em;
 
     &:hover {
       text-decoration: none;
     }
+  }
+
+  p {
+    text-wrap: pretty;
   }
 
   :focus-visible {

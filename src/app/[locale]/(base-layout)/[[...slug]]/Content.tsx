@@ -30,7 +30,7 @@ const Content: ContentComponentType<PageProps, ResultOf<typeof PageQuery>> = ({ 
   return (
     <>
       <SectionContainer className="padding-vertical-large">
-        <h1>{data.page.title}</h1>
+        <h1 className="page-title">{data.page.title}</h1>
       </SectionContainer>
       <Sections data={data.page.sections} locale={toSiteLocale(locale)} />
     </>

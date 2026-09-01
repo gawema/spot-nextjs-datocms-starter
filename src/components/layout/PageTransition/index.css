@@ -1,0 +1,12 @@
+@media (prefers-reduced-motion: no-preference) {
+  .page-transition {
+    animation: page-enter var(--motion-duration-base) var(--motion-ease-out) both;
+  }
+
+  @keyframes page-enter {
+    from {
+      opacity: 0;
+      transform: translateY(0.5rem);
+    }
+  }
+}

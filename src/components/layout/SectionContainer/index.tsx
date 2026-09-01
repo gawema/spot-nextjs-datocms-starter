@@ -1,11 +1,18 @@
+'use client';
+
 import '@/components/layout/SectionContainer/index.css';
+import { useInViewReveal } from '@/lib/animations/useInViewReveal';
 import { classList } from '@/lib/classList';
-import type { ReactNode } from 'react';
+import { type ReactNode, useRef } from 'react';
 
 /*
  * The frame every section sits in: page gutter, maximum width, and the vertical
  * rhythm above and below. Sections read their spacing from here instead of each
  * one inventing its own, and a full-bleed section simply does not use it.
+ *
+ * A client component only for the reveal: the sections themselves arrive
+ * already rendered from the server as `children`, so what ships to the browser
+ * is one observer, not the content.
  */
 
 type Props = {
@@ -14,8 +21,14 @@ type Props = {
 };
 
 export default function SectionContainer({ children, className }: Props) {
+  const section = useRef<HTMLElement>(null);
+  const isInView = useInViewReveal(section);
+
   return (
-    <section className={classList(['section-container', className])}>
+    <section
+      ref={section}
+      className={classList(['section-container', isInView && 'is-in-view', className])}
+    >
       <div className="section-container__inner">{children}</div>
     </section>
   );

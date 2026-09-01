@@ -1,7 +1,10 @@
 .site-header {
+  background: var(--bg-page);
   border-block-end: 1px solid var(--bg-border);
-  /* The mobile panel is positioned against the header, not the page. */
-  position: relative;
+  /* Sticky, which is also what the `:target` scroll-margin in base.css assumes. */
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .site-header__inner {

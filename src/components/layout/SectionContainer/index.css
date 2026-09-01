@@ -11,3 +11,42 @@
 .section-container__inner :is(p, ul, ol, blockquote) {
   max-width: 40rem;
 }
+
+/*
+ * The revealed state is the default, so a visitor without JavaScript sees every
+ * section: only where motion is welcome does the hidden state exist at all.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .section-container {
+    opacity: 0;
+    transform: translateY(2rem);
+    transition:
+      opacity 0.8s var(--motion-ease-out),
+      transform 0.8s var(--motion-ease-out);
+  }
+
+  .section-container.is-in-view {
+    opacity: 1;
+    transform: none;
+  }
+
+  /*
+   * On the way out, scrubbed by the scroll position itself. Only a `to` frame,
+   * so outside the exit range nothing applies and it cannot fight the entry
+   * transition. Where scroll-driven animations are unsupported, nothing happens.
+   */
+  @supports (animation-timeline: view()) {
+    .section-container.is-in-view {
+      animation: section-exit linear;
+      animation-range: exit 20% exit 100%;
+      animation-timeline: view();
+    }
+
+    @keyframes section-exit {
+      to {
+        opacity: 0.15;
+        transform: translateY(-2rem);
+      }
+    }
+  }
+}

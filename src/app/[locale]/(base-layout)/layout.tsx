@@ -1,4 +1,5 @@
 import ContentLink from '@/components/cms/ContentLink';
+import PageTransition from '@/components/layout/PageTransition';
 import Privacy from '@/components/layout/Privacy';
 import SiteFooter from '@/components/layout/SiteFooter';
 import SiteHeader from '@/components/layout/SiteHeader';
@@ -55,13 +56,23 @@ export default async function BaseLayout({ children, params }: Readonly<LayoutPr
         is only included in draft content responses (see executeQuery.ts).
       */}
       {isDraftModeEnabled && <ContentLink />}
+      {/*
+        The reveal hides a section until an observer sees it, which without
+        JavaScript would mean hiding it forever. This is the one place that can
+        say "no JavaScript" to the stylesheet.
+      */}
+      <noscript>
+        <style>{'.section-container { opacity: 1 !important; transform: none !important; }'}</style>
+      </noscript>
       <SiteHeader
         data={layout}
         siteName={_site.globalSeo?.siteName ?? null}
         locale={toSiteLocale(locale)}
         isDraftModeEnabled={isDraftModeEnabled}
       />
-      <main>{children}</main>
+      <main>
+        <PageTransition>{children}</PageTransition>
+      </main>
       <SiteFooter data={layout} locale={toSiteLocale(locale)} />
       <Privacy data={siteSetting} />
     </>
