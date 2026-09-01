@@ -7,7 +7,8 @@
  *
  * See: https://www.datocms.com/docs/content-management-api/resources/item#type-safe-development-with-typescript
  */
-import { isSupportedLocale, localizePathname } from '@/lib/i18n/locales';
+import { isSupportedLocale } from '@/lib/i18n/locales';
+import { pagePathname } from '@/lib/routing/pagePath';
 import type { RawApiTypes } from '@datocms/cma-client';
 import { type AnyModel, Page } from './cma-types';
 
@@ -33,7 +34,13 @@ export async function recordToWebsiteRoute(
   switch (item.__itemTypeId) {
     case Page.ID: {
       const slug = await recordToSlug(item, locale);
-      return slug ? localizePathname(`/${slug}`, locale) : null;
+      /*
+       * Through `pagePathname` rather than by joining the slug: the page
+       * flagged as the home is served at the site root and its own slug is a
+       * 404, so the plugins have to follow the same rule the site does.
+       */
+      // A record whose flag was never touched reads null, which means not the home.
+      return slug ? pagePathname({ slug, isHome: item.attributes.is_home ?? false }, locale) : null;
     }
     /*
      * Add more cases here as you add more models to your DatoCMS schema.
