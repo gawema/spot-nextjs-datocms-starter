@@ -98,16 +98,13 @@ export type Layout = ItemTypeDefinition<
   EnvironmentSettings,
   'DTCftzw4S4aKyD39qpXpgQ',
   {
-    logo: {
-      type: 'file';
+    footer_text: {
+      type: 'text';
+      localized: true;
     };
     navigation: {
       type: 'rich_text';
       blocks: MenuItem;
-      localized: true;
-    };
-    footer_text: {
-      type: 'text';
       localized: true;
     };
     footer_links: {
@@ -115,9 +112,18 @@ export type Layout = ItemTypeDefinition<
       blocks: Link;
       localized: true;
     };
+    logo: {
+      type: 'file';
+    };
     social_links: {
       type: 'rich_text';
       blocks: Link;
+    };
+    navigation_style: {
+      type: 'string';
+    };
+    panel_position: {
+      type: 'string';
     };
   }
 >;

@@ -268,4 +268,9 @@
   .cms-link:hover::after {
     transform: translateX(0.25rem);
   }
+
+  /* Nothing scrolls behind an open modal panel. */
+  body:has(dialog[open]) {
+    overflow: hidden;
+  }
 }

@@ -1,7 +1,7 @@
 import '@/components/layout/SiteHeader/index.css';
 import Link from '@/components/blocks/Link';
 import DraftModeToggler from '@/components/dev/DraftModeToggler';
-import MobileMenu from '@/components/layout/SiteHeader/MobileMenu';
+import MenuPanel from '@/components/layout/SiteHeader/MenuPanel';
 import { SiteHeaderFragment } from '@/components/layout/SiteHeader/fragment';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { SUPPORTED_LOCALES, type SiteLocale, localizePathname } from '@/lib/i18n/locales';
@@ -17,10 +17,11 @@ import NextLink from 'next/link';
  * rather than to the translation of the current page: the translated slug is
  * known by the page route, not by a layout.
  *
- * Below the `sm` breakpoint the navigation lives inside a panel that a toggle
- * opens; from there up the same markup lays out as a row, and second levels open
- * on hover and on keyboard focus. Only the toggle is a client component, so the
- * menu itself is still rendered on the server.
+ * One markup, two shapes. The Layout record decides whether the navigation is a
+ * row with dropdowns that turns into a panel below the `sm` breakpoint, or a
+ * Menu button at every width, and which edge the panel comes from. Only the
+ * panel's open state is a client component: the menu is rendered on the server
+ * either way.
  */
 
 type Props = {
@@ -34,6 +35,29 @@ export default async function SiteHeader({ data, siteName, locale, isDraftModeEn
   const t = await getTranslations();
   const layout = data ? readFragment(SiteHeaderFragment, data) : null;
   const logo = layout?.logo;
+
+  const menu =
+    layout && layout.navigation.length > 0 ? (
+      <nav className="site-nav" aria-label={t('t_nav_main')}>
+        <ul className="site-nav__list">
+          {layout.navigation.map((item) => (
+            <li className="site-nav__item" key={item.id}>
+              <Link data={item.link} locale={locale} className="site-nav__link" />
+
+              {item.dropdown.length > 0 ? (
+                <ul className="site-nav__dropdown">
+                  {item.dropdown.map((child) => (
+                    <li key={child.id}>
+                      <Link data={child} locale={locale} className="site-nav__link" />
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </li>
+          ))}
+        </ul>
+      </nav>
+    ) : null;
 
   return (
     <header className="site-header padding-horizontal-padding-global">
@@ -54,28 +78,25 @@ export default async function SiteHeader({ data, siteName, locale, isDraftModeEn
           )}
         </NextLink>
 
-        {layout && layout.navigation.length > 0 ? (
-          <MobileMenu label={t('t_menu')}>
-            <nav className="site-nav" aria-label={t('t_nav_main')}>
-              <ul className="site-nav__list">
-                {layout.navigation.map((item) => (
-                  <li className="site-nav__item" key={item.id}>
-                    <Link data={item.link} locale={locale} className="site-nav__link" />
+        {layout && menu ? (
+          <>
+            {/*
+             * The menu markup appears twice on purpose. A closed `<dialog>` is
+             * `display: none`, so the row that desktop shows cannot live inside
+             * the panel. Only one of the two is ever displayed, so only one is
+             * in the accessibility tree, and the cost is a few lines of HTML.
+             */}
+            <div className="site-header__row">{menu}</div>
 
-                    {item.dropdown.length > 0 ? (
-                      <ul className="site-nav__dropdown">
-                        {item.dropdown.map((child) => (
-                          <li key={child.id}>
-                            <Link data={child} locale={locale} className="site-nav__link" />
-                          </li>
-                        ))}
-                      </ul>
-                    ) : null}
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </MobileMenu>
+            <MenuPanel
+              label={t('t_menu')}
+              closeLabel={t('t_close')}
+              style={layout.navigationStyle}
+              position={layout.panelPosition}
+            >
+              {menu}
+            </MenuPanel>
+          </>
         ) : null}
 
         <div className="site-header__end">

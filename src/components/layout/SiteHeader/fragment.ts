@@ -4,6 +4,8 @@ import { graphql } from '@/lib/datocms/graphql';
 export const SiteHeaderFragment = graphql(
   /* GraphQL */ `
     fragment SiteHeaderFragment on LayoutRecord {
+      navigationStyle
+      panelPosition
       logo {
         url
         alt
