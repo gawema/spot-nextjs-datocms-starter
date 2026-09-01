@@ -1,0 +1,14 @@
+.image-section {
+  margin-block-end: 0;
+}
+
+/* Only meaningful when the figure is a lane grid, which is the bleed case. */
+.image-section__media {
+  grid-column: bleed;
+}
+
+.image-section__caption {
+  color: var(--text-muted);
+  font-size: var(--font-size-text-small);
+  margin-block-start: var(--spacing-space-extra-small);
+}

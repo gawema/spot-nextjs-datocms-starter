@@ -39,23 +39,6 @@ export const AccordionSection = {
   REF: { type: 'item_type', id: 'GHPlTJWYQL-RItt_mgAzYg' },
 } as const;
 
-export type FullImageSection = ItemTypeDefinition<
-  EnvironmentSettings,
-  'Lv51zZ96QfGEd6qx_uOKVQ',
-  {
-    image: {
-      type: 'file';
-    };
-    caption: {
-      type: 'string';
-    };
-  }
->;
-export const FullImageSection = {
-  ID: 'Lv51zZ96QfGEd6qx_uOKVQ',
-  REF: { type: 'item_type', id: 'Lv51zZ96QfGEd6qx_uOKVQ' },
-} as const;
-
 export type HeroSection = ItemTypeDefinition<
   EnvironmentSettings,
   'KyTRgL91Te6FjX_2BeAg7g',
@@ -123,6 +106,29 @@ export type ImageGridSection = ItemTypeDefinition<
 export const ImageGridSection = {
   ID: 'M2XshV_sQSeKMOToYJHjxg',
   REF: { type: 'item_type', id: 'M2XshV_sQSeKMOToYJHjxg' },
+} as const;
+
+export type ImageSection = ItemTypeDefinition<
+  EnvironmentSettings,
+  'Lv51zZ96QfGEd6qx_uOKVQ',
+  {
+    image: {
+      type: 'file';
+    };
+    width: {
+      type: 'string';
+    };
+    aspect_ratio: {
+      type: 'string';
+    };
+    caption: {
+      type: 'string';
+    };
+  }
+>;
+export const ImageSection = {
+  ID: 'Lv51zZ96QfGEd6qx_uOKVQ',
+  REF: { type: 'item_type', id: 'Lv51zZ96QfGEd6qx_uOKVQ' },
 } as const;
 
 export type ImageWithTextSection = ItemTypeDefinition<
@@ -252,7 +258,7 @@ export type Page = ItemTypeDefinition<
         | HeroSection
         | TextSection
         | ImageWithTextSection
-        | FullImageSection
+        | ImageSection
         | ImageGridSection
         | SliderSection
         | AccordionSection;
@@ -361,11 +367,11 @@ export const VideoBlock = {
 export type AnyBlock =
   | AccordionItem
   | AccordionSection
-  | FullImageSection
   | HeroSection
   | ImageBlock
   | ImageGalleryBlock
   | ImageGridSection
+  | ImageSection
   | ImageWithTextSection
   | Link
   | MenuItem

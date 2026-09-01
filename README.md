@@ -91,9 +91,11 @@ Three layers. Keep them apart in your head:
   interface wording and the privacy ids, and mounts SPOT's consent tool, which is also what
   starts Google Tag Manager once the visitor has accepted, so there is no GTM snippet
   anywhere in the code.
-- **Example content**: seven sections (hero, text, image with text, full image, image grid,
-  slider, accordion) and three nested blocks (link, accordion item, menu item). The slider
-  is the only one with a dependency, `embla-carousel-react`. They are demonstrations of the
+- **Example content**: seven sections (hero, text, image with text, image, image grid,
+  slider, accordion) and three nested blocks (link, accordion item, menu item). The image
+  section is the one with options rather than variants: the editor picks a width lane and an
+  aspect ratio, which is why its crop happens in CSS from the asset's focal point instead of
+  in the image URL. The slider is the only one with a dependency, `embla-carousel-react`. They are demonstrations of the
   convention, and the **Abschnitte** page (`/abschnitte`, `/en/sections`) renders one of
   each so you can see what you are choosing from. Copy one, then delete the ones the
   project does not use, in the CMS and in the code, that page included.

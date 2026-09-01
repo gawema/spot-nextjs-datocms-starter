@@ -1,11 +1,11 @@
 import AccordionSection from '@/components/sections/AccordionSection';
-import FullImageSection from '@/components/sections/FullImageSection';
-import { FullImageSectionFragment } from '@/components/sections/FullImageSection/fragment';
+import { AccordionSectionFragment } from '@/components/sections/AccordionSection/fragment';
 import HeroSection from '@/components/sections/HeroSection';
 import { HeroSectionFragment } from '@/components/sections/HeroSection/fragment';
 import ImageGridSection from '@/components/sections/ImageGridSection';
 import { ImageGridSectionFragment } from '@/components/sections/ImageGridSection/fragment';
-import { AccordionSectionFragment } from '@/components/sections/AccordionSection/fragment';
+import ImageSection from '@/components/sections/ImageSection';
+import { ImageSectionFragment } from '@/components/sections/ImageSection/fragment';
 import ImageWithTextSection from '@/components/sections/ImageWithTextSection';
 import { ImageWithTextSectionFragment } from '@/components/sections/ImageWithTextSection/fragment';
 import SliderSection from '@/components/sections/SliderSection';
@@ -37,7 +37,7 @@ export const SectionsFragment = graphql(
       ...HeroSectionFragment
       ...TextSectionFragment
       ...ImageWithTextSectionFragment
-      ...FullImageSectionFragment
+      ...ImageSectionFragment
       ...ImageGridSectionFragment
       ...SliderSectionFragment
       ...AccordionSectionFragment
@@ -47,7 +47,7 @@ export const SectionsFragment = graphql(
     HeroSectionFragment,
     TextSectionFragment,
     ImageWithTextSectionFragment,
-    FullImageSectionFragment,
+    ImageSectionFragment,
     ImageGridSectionFragment,
     SliderSectionFragment,
     AccordionSectionFragment,
@@ -72,8 +72,8 @@ export default function Sections({ data, locale }: Props) {
             return <TextSection key={section.id} data={section} locale={locale} />;
           case 'ImageWithTextSectionRecord':
             return <ImageWithTextSection key={section.id} data={section} locale={locale} />;
-          case 'FullImageSectionRecord':
-            return <FullImageSection key={section.id} data={section} />;
+          case 'ImageSectionRecord':
+            return <ImageSection key={section.id} data={section} />;
           case 'ImageGridSectionRecord':
             return <ImageGridSection key={section.id} data={section} />;
           case 'SliderSectionRecord':

@@ -344,31 +344,6 @@ Represents signed double-precision fractional values as specified by [IEEE 754](
 """
 scalar FloatType
 
-"""Block of type 🏔️ Full Image Section (full_image_section)"""
-type FullImageSectionRecord implements RecordInterface {
-  _createdAt: DateTime!
-
-  """Editing URL"""
-  _editingUrl: String
-  _firstPublishedAt: DateTime!
-  _isValid: BooleanType!
-  _modelApiKey: String!
-  _publicationScheduledAt: DateTime
-  _publishedAt: DateTime!
-
-  """Generates SEO and Social card meta tags to be used in your frontend"""
-  _seoMetaTags(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-  ): [Tag!]!
-  _status: ItemStatus!
-  _unpublishingScheduledAt: DateTime
-  _updatedAt: DateTime!
-  caption: String
-  id: ItemId!
-  image: FileField!
-}
-
 type GlobalSeoField {
   facebookPageUrl: String
   fallbackSeo: SeoField
@@ -577,6 +552,33 @@ type ImageGridSectionRecord implements RecordInterface {
   heading: String
   id: ItemId!
   images: [FileField!]!
+}
+
+"""Block of type 🖼️ Image Section (image_section)"""
+type ImageSectionRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  aspectRatio: String!
+  caption: String
+  id: ItemId!
+  image: FileField!
+  width: String!
 }
 
 """Block of type 🖼️ Image with Text Section (image_with_text_section)"""
@@ -2857,7 +2859,7 @@ enum PageModelOrderBy {
   title_DESC
 }
 
-union PageModelSectionsField = AccordionSectionRecord | FullImageSectionRecord | HeroSectionRecord | ImageGridSectionRecord | ImageWithTextSectionRecord | SliderSectionRecord | TextSectionRecord
+union PageModelSectionsField = AccordionSectionRecord | HeroSectionRecord | ImageGridSectionRecord | ImageSectionRecord | ImageWithTextSectionRecord | SliderSectionRecord | TextSectionRecord
 
 type PageModelSectionsFieldListListNonNullMultiLocaleField {
   locale: SiteLocale
