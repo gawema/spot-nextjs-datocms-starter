@@ -5,5 +5,4 @@
 /* The first row needs the border the others get from their neighbour. */
 .accordion-section__items {
   border-block-start: 1px solid var(--bg-border);
-  max-width: 48rem;
 }

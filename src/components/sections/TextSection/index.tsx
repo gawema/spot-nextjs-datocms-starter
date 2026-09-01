@@ -27,7 +27,7 @@ export default function TextSection({ data, locale }: Props) {
   const { heading, body } = readFragment(TextSectionFragment, data);
 
   return (
-    <SectionContainer className="padding-vertical-main">
+    <SectionContainer className="padding-vertical-main" width="measure">
       {heading ? <h2 className="text-section__heading">{heading}</h2> : null}
       <Text
         data={body}

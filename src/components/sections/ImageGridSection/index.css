@@ -3,12 +3,10 @@
 }
 
 .image-grid {
-  display: grid;
-  gap: var(--viewport-grid-gutter);
-  grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
   list-style: none;
   margin-block-end: 0;
   padding-inline-start: 0;
+  row-gap: var(--viewport-grid-gutter);
 }
 
 .image-grid li {
@@ -17,4 +15,17 @@
 
 .image-grid img {
   border-radius: var(--corner-radius-medium);
+}
+
+/* --bp-sm, --bp-lg: two up, then three up, on the twelve columns of the grid. */
+@media (min-width: 768px) {
+  .image-grid > li {
+    grid-column: span 6;
+  }
+}
+
+@media (min-width: 1024px) {
+  .image-grid > li {
+    grid-column: span 4;
+  }
 }

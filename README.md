@@ -156,6 +156,17 @@ whole rem-based system in proportion instead of leaving a 1152px column in the m
 4K screen. It is written as `max(1rem, …)` so a visitor who raised their browser font size
 never has it scaled back down. Body copy is the one thing that stays at 16px.
 
+**How wide a component may go is a lane, not a max-width of its own.** `.layout-lanes` is
+one grid whose outer tracks are the page gutter, so something reaching the edge of the
+screen takes those tracks instead of cancelling a padding with a negative margin. Four
+lanes: `measure` for prose, `content` for the default, `wide` a step past it for grids and
+sliders, `bleed` edge to edge. `SectionContainer` takes the lane as a prop, and the same
+grid works inside a section, which is how the hero puts its words back on the content lane
+over a full-width image. `.layout-columns` is the other half, the twelve columns of the
+design grid for a component that has to match a layout column for column; the columns
+divide whichever lane they sit in, so things that must align stay in the same lane. Both are
+visible on `/spacing`.
+
 Headings default to `--font-family-secondary`, a serif, with automatic hyphenation because
 German compound words overflow a 96px line. A project swaps the two families in
 `primitives.css` and everything follows.

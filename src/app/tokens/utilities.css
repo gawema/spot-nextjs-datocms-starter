@@ -8,6 +8,64 @@
     padding-inline: var(--padding-horizontal-padding-global);
   }
 
+  /*
+   * The width system. One grid whose outer tracks are the page gutter, so a
+   * child reaches the edge of the screen by taking those tracks instead of
+   * cancelling a padding with a negative margin. Four lanes:
+   *
+   *   measure  prose, `content` capped to one column of text
+   *   content  the default, everything lands here unless it says otherwise
+   *   wide     a step past content on each side, for grids and sliders
+   *   bleed    edge to edge
+   *
+   * Used by SectionContainer for whole sections, and inside a section wherever
+   * something has to come back to the content lane over a bleeding image.
+   *
+   * Set `row-gap`, never `gap`: a column gap would push the lanes apart.
+   */
+  .layout-lanes {
+    display: grid;
+    grid-template-columns:
+      [bleed-start] minmax(var(--layout-gutter), 1fr)
+      [wide-start] minmax(0, var(--layout-wide-step))
+      [content-start] min(100% - 2 * var(--layout-gutter), var(--layout-content))
+      [content-end] minmax(0, var(--layout-wide-step))
+      [wide-end] minmax(var(--layout-gutter), 1fr)
+      [bleed-end];
+  }
+
+  .layout-lanes > * {
+    grid-column: content;
+  }
+
+  .layout-lanes > [data-lane='measure'] {
+    grid-column: content;
+    max-width: var(--layout-measure);
+  }
+
+  .layout-lanes > [data-lane='wide'] {
+    grid-column: wide;
+  }
+
+  .layout-lanes > [data-lane='bleed'] {
+    grid-column: bleed;
+  }
+
+  /*
+   * The 12 columns of the design grid, for a component that has to match a
+   * layout column for column. Children span the full width until a breakpoint
+   * says otherwise, so the mobile stack costs no CSS.
+   */
+  .layout-columns {
+    column-gap: var(--viewport-grid-gutter);
+    display: grid;
+    grid-template-columns: repeat(var(--viewport-grid-columns), minmax(0, 1fr));
+  }
+
+  .layout-columns > * {
+    grid-column: 1 / -1;
+  }
+
   .padding-vertical-small {
     padding-block: var(--padding-vertical-small);
   }

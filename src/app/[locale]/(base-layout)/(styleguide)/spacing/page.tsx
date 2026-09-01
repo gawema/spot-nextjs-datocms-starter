@@ -1,4 +1,5 @@
 import { BREAKPOINTS, BREAKPOINT_NOTES } from '@/lib/layout/breakpoints';
+import { FLUID_SPACING } from '@/lib/layout/fluidScale';
 
 export const metadata = { title: 'Spacing | Styleguide' };
 
@@ -21,17 +22,17 @@ const MICRO = [
   '--spacing-space-4-extra-large',
 ];
 
-const RHYTHM = [
-  { token: '--padding-vertical-small', range: '24 → 32px' },
-  { token: '--padding-vertical-main', range: '48 → 64px' },
-  { token: '--padding-vertical-large', range: '96 → 128px' },
-  { token: '--padding-vertical-xl', range: '128 → 192px' },
-];
+const isRhythm = (name: string) => name.startsWith('--padding-vertical');
 
-const GUTTERS = [
-  { token: '--padding-horizontal-padding-global', range: '16 → 24px' },
-  { token: '--padding-horizontal-container-gutter', range: '16 → 24px' },
-  { token: '--viewport-grid-gutter', range: '12 → 16px' },
+const RHYTHM = FLUID_SPACING.filter(({ name }) => isRhythm(name));
+const GUTTERS = FLUID_SPACING.filter(({ name }) => !isRhythm(name));
+
+/* The lanes of `.layout-lanes`, widest first. `content` needs no attribute. */
+const LANES = [
+  { lane: 'bleed', note: 'edge to edge, the outer tracks of the grid' },
+  { lane: 'wide', note: 'one --layout-wide-step past content, each side' },
+  { lane: 'content', note: 'the default: --layout-content, or the viewport minus the gutter' },
+  { lane: 'measure', note: 'content, capped to --layout-measure' },
 ];
 
 const RADII = [
@@ -60,28 +61,49 @@ export default function SpacingPage() {
 
       <section>
         <h2>Between sections, fluid</h2>
-        {RHYTHM.map(({ token, range }) => (
-          <div className="styleguide-row" key={token}>
+        {RHYTHM.map(({ name, minPx, maxPx }) => (
+          <div className="styleguide-row" key={name}>
             <div className="styleguide-row__meta">
-              <span>{token}</span>
-              <span>{range}</span>
+              <span>{name}</span>
+              <span>
+                {minPx} → {maxPx}px
+              </span>
             </div>
-            <div className="styleguide-block" style={{ height: `var(${token})` }} />
+            <div className="styleguide-block" style={{ height: `var(${name})` }} />
           </div>
         ))}
       </section>
 
       <section>
         <h2>Gutters, fluid</h2>
-        {GUTTERS.map(({ token, range }) => (
-          <div className="styleguide-row" key={token}>
+        {GUTTERS.map(({ name, minPx, maxPx }) => (
+          <div className="styleguide-row" key={name}>
             <div className="styleguide-row__meta">
-              <span>{token}</span>
-              <span>{range}</span>
+              <span>{name}</span>
+              <span>
+                {minPx} → {maxPx}px
+              </span>
             </div>
-            <div className="styleguide-bar" style={{ width: `var(${token})` }} />
+            <div className="styleguide-bar" style={{ width: `var(${name})` }} />
           </div>
         ))}
+      </section>
+
+      <section>
+        <h2>Widths</h2>
+        <p>
+          How wide a component may go. A section picks a lane, and everything inside it either
+          inherits that width or, for prose, the measure. The model below is the real{' '}
+          <code>.layout-lanes</code> grid with the tokens scaled down so it fits this page.
+        </p>
+        <div className="styleguide-lanes layout-lanes">
+          {LANES.map(({ lane, note }) => (
+            <div className="styleguide-lane" data-lane={lane} key={lane}>
+              {lane}
+              <span>{note}</span>
+            </div>
+          ))}
+        </div>
       </section>
 
       <section>

@@ -1,9 +1,17 @@
+/*
+ * The figure is itself a lane grid: the image takes the outer tracks and the
+ * caption comes back to the content lane, without either one restating a width.
+ */
 .full-image {
   margin-block-end: 0;
 }
 
+.full-image__media {
+  grid-column: bleed;
+}
+
 .full-image__caption {
-  margin-inline: auto;
-  max-width: 72rem;
-  padding-inline: var(--padding-horizontal-padding-global);
+  color: var(--text-muted);
+  font-size: var(--font-size-text-small);
+  margin-block-start: var(--spacing-space-extra-small);
 }

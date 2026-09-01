@@ -94,6 +94,16 @@
     --viewport-grid-columns: 12;
 
     /*
+     * How wide a component may go. These are the only widths in the system:
+     * `.layout-lanes` in utilities.css turns them into the lanes a section
+     * sits in, so nothing hardcodes a max-width of its own.
+     */
+    --layout-gutter: var(--padding-horizontal-padding-global);
+    --layout-measure: 40rem; /* one column of prose, ~75 characters */
+    --layout-content: 72rem; /* the default lane */
+    --layout-wide-step: 6rem; /* how far past `content` the `wide` lane reaches, each side */
+
+    /*
      * Placeholder palette: a neutral ramp plus one accent hue. Both ramps go
      * light to dark, so a project can swap the hex values without rethinking
      * which step means what.

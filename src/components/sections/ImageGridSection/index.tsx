@@ -21,7 +21,7 @@ export default function ImageGridSection({ data }: Props) {
     <SectionContainer className="padding-vertical-main">
       {heading ? <h2 className="image-grid__heading">{heading}</h2> : null}
 
-      <ul className="image-grid" data-datocms-content-link-group>
+      <ul className="image-grid layout-columns" data-datocms-content-link-group>
         {images.map((image) => (
           <li key={image.id}>
             {image.responsiveImage ? <ResponsiveImage data={image.responsiveImage} /> : null}

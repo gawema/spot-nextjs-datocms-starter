@@ -7,18 +7,15 @@
 
 /*
  * A gradient rather than a flat overlay: the words need contrast, the top of
- * the image does not need dimming.
+ * the image does not need dimming. The copy is a lane grid, which is what puts
+ * the words on the content lane over a bleeding image.
  */
 .hero__copy {
   background: linear-gradient(to top, rgb(0 0 0 / 0.65), rgb(0 0 0 / 0));
   color: var(--color-absolute-white);
-  display: grid;
-  gap: var(--spacing-space-medium);
-  justify-items: start;
-  padding: var(--padding-vertical-large) var(--padding-horizontal-padding-global)
-    var(--padding-vertical-main);
+  padding-block: var(--padding-vertical-large) var(--padding-vertical-main);
   position: relative;
-  width: 100%;
+  row-gap: var(--spacing-space-medium);
 }
 
 .hero__heading {
@@ -27,24 +24,16 @@
   font-weight: var(--font-weight-display);
   letter-spacing: var(--letter-spacing-display);
   line-height: var(--line-height-display);
-  margin-inline: auto;
-  max-width: 72rem;
   text-wrap: balance;
-  width: 100%;
 }
 
 .hero__body {
   font-size: var(--font-size-text-large);
   line-height: var(--line-height-text-large);
   margin-block-end: 0;
-  margin-inline: auto;
-  max-width: 72rem;
-  width: 100%;
 }
 
 .hero__link {
   color: var(--color-absolute-white);
-  margin-inline: auto;
-  max-width: 72rem;
-  width: 100%;
+  justify-self: start;
 }

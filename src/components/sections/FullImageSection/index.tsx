@@ -14,9 +14,11 @@ export default function FullImageSection({ data }: Props) {
   const { image, caption } = readFragment(FullImageSectionFragment, data);
 
   return (
-    <SectionContainer bleed className="padding-vertical-main">
-      <figure className="full-image" data-datocms-content-link-group>
-        {image.responsiveImage ? <ResponsiveImage data={image.responsiveImage} /> : null}
+    <SectionContainer width="bleed" className="padding-vertical-main">
+      <figure className="full-image layout-lanes" data-datocms-content-link-group>
+        {image.responsiveImage ? (
+          <ResponsiveImage data={image.responsiveImage} pictureClassName="full-image__media" />
+        ) : null}
         {caption ? <figcaption className="full-image__caption">{caption}</figcaption> : null}
       </figure>
     </SectionContainer>

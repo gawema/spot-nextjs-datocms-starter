@@ -23,7 +23,7 @@ export default async function SliderSection({ data }: Props) {
   const t = await getTranslations();
 
   return (
-    <SectionContainer className="padding-vertical-main">
+    <SectionContainer className="padding-vertical-main" width="wide">
       {heading ? <h2 className="slider__heading">{heading}</h2> : null}
 
       <div data-datocms-content-link-group>

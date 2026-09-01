@@ -1,28 +1,13 @@
-.section-container {
-  padding-inline: var(--padding-horizontal-padding-global);
-}
-
-.section-container__inner {
-  margin-inline: auto;
-  max-width: 72rem;
-}
-
-.section-container--bleed {
-  padding-inline: 0;
-}
-
-.section-container--bleed .section-container__inner {
-  max-width: none;
-}
-
 /*
- * Prose wants a shorter line than a two-column layout does. `:not([class])`
- * keeps this to actual prose: structured text renders unclassed elements, while
- * a component list like the image grid or the slider carries a class and must
- * keep the full width.
+ * The width comes from the lane, see `.layout-lanes` in tokens/utilities.css.
+ *
+ * Prose wants a shorter line than a two-column layout does, even in the content
+ * lane. `:not([class])` keeps this to actual prose: structured text renders
+ * unclassed elements, while a component list like the image grid or the slider
+ * carries a class and must keep the full width.
  */
 .section-container__inner :is(p, ul, ol, blockquote):not([class]) {
-  max-width: 40rem;
+  max-width: var(--layout-measure);
 }
 
 /*

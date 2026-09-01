@@ -99,3 +99,29 @@
   gap: var(--spacing-space-medium);
   max-width: 24rem;
 }
+
+/*
+ * The width lanes, at a scale that fits this page: the grid and the lane
+ * attributes are the real ones, only the tokens are divided down.
+ */
+.styleguide-lanes {
+  --layout-gutter: 0.75rem;
+  --layout-content: 26rem;
+  --layout-wide-step: 3rem;
+  background: var(--bg-subtle);
+  padding-block: var(--spacing-space-small);
+  row-gap: var(--spacing-space-extra-small);
+}
+
+.styleguide-lane {
+  background: var(--bg-accent);
+  color: var(--text-accent);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-text-small);
+  padding: var(--spacing-space-extra-small) var(--spacing-space-small);
+}
+
+.styleguide-lane span {
+  color: var(--bg-highlight);
+  display: block;
+}

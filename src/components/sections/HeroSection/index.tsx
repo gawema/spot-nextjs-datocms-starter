@@ -23,7 +23,7 @@ export default function HeroSection({ data, locale }: Props) {
   const { heading, body, image, link } = readFragment(HeroSectionFragment, data);
 
   return (
-    <SectionContainer bleed>
+    <SectionContainer width="bleed">
       <div className="hero" data-datocms-content-link-group>
         {image.responsiveImage ? (
           /*
@@ -42,7 +42,7 @@ export default function HeroSection({ data, locale }: Props) {
           />
         ) : null}
 
-        <div className="hero__copy">
+        <div className="hero__copy layout-lanes">
           <h2 className="hero__heading">{heading}</h2>
           {body ? <p className="hero__body">{body}</p> : null}
           {link ? <Link data={link} locale={locale} className="hero__link" /> : null}
