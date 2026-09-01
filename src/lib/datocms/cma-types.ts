@@ -102,10 +102,8 @@ export type Layout = ItemTypeDefinition<
       type: 'text';
       localized: true;
     };
-    navigation: {
-      type: 'rich_text';
-      blocks: MenuItem;
-      localized: true;
+    navigation_style: {
+      type: 'string';
     };
     footer_links: {
       type: 'rich_text';
@@ -115,14 +113,19 @@ export type Layout = ItemTypeDefinition<
     logo: {
       type: 'file';
     };
+    panel_position: {
+      type: 'string';
+    };
+    navigation: {
+      type: 'rich_text';
+      blocks: MenuItem;
+      localized: true;
+    };
     social_links: {
       type: 'rich_text';
       blocks: Link;
     };
-    navigation_style: {
-      type: 'string';
-    };
-    panel_position: {
+    panel_orientation: {
       type: 'string';
     };
   }

@@ -6,6 +6,7 @@ export const SiteHeaderFragment = graphql(
     fragment SiteHeaderFragment on LayoutRecord {
       navigationStyle
       panelPosition
+      panelOrientation
       logo {
         url
         alt

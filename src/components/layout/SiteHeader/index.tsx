@@ -93,6 +93,7 @@ export default async function SiteHeader({ data, siteName, locale, isDraftModeEn
               closeLabel={t('t_close')}
               style={layout.navigationStyle}
               position={layout.panelPosition}
+              orientation={layout.panelOrientation}
             >
               {menu}
             </MenuPanel>

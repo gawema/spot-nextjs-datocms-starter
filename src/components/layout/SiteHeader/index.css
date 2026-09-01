@@ -54,23 +54,78 @@
  * Mobile first: the navigation is a panel, and every level is laid out
  * vertically. The desktop row is the exception, further down, and only when the
  * Layout record asks for it.
+ *
+ * The panel is dark on purpose: it covers the page, so it should read as a
+ * different place rather than as more of the same one.
  */
 .menu-panel__dialog {
-  background: var(--bg-page);
+  background: var(--color-neutral-600);
   border: none;
-  color: var(--text-body);
+  color: var(--color-neutral-100);
   max-height: none;
   max-width: none;
   padding: 0;
 }
 
-.menu-panel__dialog::backdrop {
-  background: rgb(0 0 0 / 0.4);
+/*
+ * Opening and closing are animated in CSS alone: `allow-discrete` lets `display`
+ * and `overlay` take part in the transition, and `@starting-style` gives the
+ * browser the frame to come from. No timers, no state beyond `open`.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .menu-panel__dialog {
+    opacity: 0;
+    transition:
+      opacity var(--motion-duration-base) var(--motion-ease-out),
+      translate var(--motion-duration-base) var(--motion-ease-out),
+      display var(--motion-duration-base) allow-discrete,
+      overlay var(--motion-duration-base) allow-discrete;
+  }
+
+  .menu-panel[data-position='right'] .menu-panel__dialog {
+    translate: 100% 0;
+  }
+
+  .menu-panel[data-position='top'] .menu-panel__dialog {
+    translate: 0 -2rem;
+  }
+
+  .menu-panel__dialog[open] {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  @starting-style {
+    .menu-panel[data-position='right'] .menu-panel__dialog[open] {
+      opacity: 0;
+      translate: 100% 0;
+    }
+
+    .menu-panel[data-position='top'] .menu-panel__dialog[open] {
+      opacity: 0;
+      translate: 0 -2rem;
+    }
+  }
+
+  .menu-panel__dialog::backdrop {
+    background: rgb(0 0 0 / 0);
+    transition: background var(--motion-duration-base) var(--motion-ease-out);
+  }
+
+  .menu-panel__dialog[open]::backdrop {
+    background: rgb(0 0 0 / 0.5);
+  }
+
+  @starting-style {
+    .menu-panel__dialog[open]::backdrop {
+      background: rgb(0 0 0 / 0);
+    }
+  }
 }
 
 .menu-panel[data-position='right'] .menu-panel__dialog {
   block-size: 100%;
-  inline-size: min(24rem, 100%);
+  inline-size: min(28rem, 100%);
   /* Pinned to the inline end, which flips with the writing direction. */
   margin-block: 0;
   margin-inline: auto 0;
@@ -85,34 +140,52 @@
 .menu-panel__body {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-space-large);
-  padding: var(--spacing-space-medium) var(--padding-horizontal-padding-global);
+  gap: var(--padding-vertical-main);
+  min-block-size: 100%;
+  padding: var(--spacing-space-medium) var(--padding-horizontal-padding-global)
+    var(--padding-vertical-main);
 }
 
 .menu-panel__close {
   align-self: flex-end;
+  color: var(--color-neutral-100);
+}
+
+.menu-panel__close:hover:not(:disabled) {
+  background: rgb(255 255 255 / 0.1);
 }
 
 .site-header__row {
   display: none;
 }
 
+/* Inside the panel: bigger, and the two levels read as two levels. */
+.menu-panel .site-nav {
+  margin-inline: auto;
+  max-width: 72rem;
+  width: 100%;
+}
+
 .site-nav__list,
 .site-nav__dropdown {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-space-small);
   list-style: none;
   margin-block-end: 0;
   padding-inline-start: 0;
 }
 
-.site-nav__item {
-  margin-block-start: 0;
+.site-nav__list {
+  gap: var(--spacing-space-large);
 }
 
 .site-nav__dropdown {
-  padding-inline-start: var(--spacing-space-medium);
+  gap: var(--spacing-space-extra-small);
+  margin-block-start: var(--spacing-space-small);
+}
+
+.site-nav__item {
+  margin-block-start: 0;
 }
 
 .site-nav__dropdown li {
@@ -120,13 +193,32 @@
 }
 
 .site-nav__link {
-  color: var(--text-body);
+  color: inherit;
   text-decoration: none;
-  white-space: nowrap;
 }
 
 .site-nav__link:hover {
   text-decoration: underline;
+}
+
+.menu-panel .site-nav__item > .site-nav__link {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-h2);
+  letter-spacing: var(--letter-spacing-h2);
+  line-height: var(--line-height-h2);
+}
+
+.menu-panel .site-nav__dropdown .site-nav__link {
+  color: var(--color-neutral-300);
+  font-size: var(--font-size-text-large);
+  line-height: var(--line-height-text-large);
+}
+
+/* Side by side, each entry carrying its own second level. */
+.menu-panel[data-orientation='horizontal'] .site-nav__list {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--spacing-space-extra-large);
 }
 
 /*
@@ -153,6 +245,11 @@
     gap: var(--spacing-space-medium);
   }
 
+  .site-header__row .site-nav__link {
+    color: var(--text-body);
+    white-space: nowrap;
+  }
+
   .site-header__row .site-nav__item {
     position: relative;
   }
@@ -166,7 +263,9 @@
     background: var(--bg-page);
     border: 1px solid var(--bg-border);
     border-radius: var(--corner-radius-medium);
+    gap: var(--spacing-space-small);
     inset-inline-start: 0;
+    margin-block-start: 0;
     opacity: 0;
     padding: var(--spacing-space-small) var(--spacing-space-medium);
     pointer-events: none;

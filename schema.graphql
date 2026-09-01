@@ -2615,6 +2615,7 @@ type LayoutRecord implements RecordInterface {
     fallbackLocales: [SiteLocale!]
   ): [MenuItemRecord!]!
   navigationStyle: String!
+  panelOrientation: String!
   panelPosition: String!
   socialLinks: [LinkRecord!]!
 }

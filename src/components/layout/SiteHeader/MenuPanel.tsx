@@ -14,9 +14,10 @@ import { type ReactNode, useEffect, useRef, useState } from 'react';
  * hand-written trap would be more code and worse. Locking the page scroll is a
  * single CSS rule on `body:has(dialog[open])`, so that is not here either.
  *
- * Whether the panel replaces the row at every width, and which edge it comes
- * from, are decided by the Layout record in the CMS and arrive as data
- * attributes: the CSS reads them, this component does not branch on them.
+ * Whether the panel replaces the row at every width, which edge it comes from
+ * and how the entries are laid out inside are all decided by the Layout record
+ * in the CMS and arrive as data attributes: the CSS reads them, this component
+ * does not branch on them.
  */
 
 type Props = {
@@ -24,10 +25,18 @@ type Props = {
   closeLabel: string;
   style: string;
   position: string;
+  orientation: string;
   children: ReactNode;
 };
 
-export default function MenuPanel({ label, closeLabel, style, position, children }: Props) {
+export default function MenuPanel({
+  label,
+  closeLabel,
+  style,
+  position,
+  orientation,
+  children,
+}: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const dialog = useRef<HTMLDialogElement>(null);
 
@@ -48,7 +57,12 @@ export default function MenuPanel({ label, closeLabel, style, position, children
   }, [isOpen]);
 
   return (
-    <div className="menu-panel" data-style={style} data-position={position}>
+    <div
+      className="menu-panel"
+      data-style={style}
+      data-position={position}
+      data-orientation={orientation}
+    >
       <Button
         className="menu-panel__toggle"
         variant="ghost"
