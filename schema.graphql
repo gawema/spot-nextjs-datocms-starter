@@ -3220,6 +3220,8 @@ type SiteSettingRecord implements RecordInterface {
   _status: ItemStatus!
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
+  cid: String
+  gtm: String
   id: ItemId!
   translations: JsonField
 }

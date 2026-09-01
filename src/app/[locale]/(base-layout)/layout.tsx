@@ -1,4 +1,5 @@
 import ContentLink from '@/components/cms/ContentLink';
+import Privacy from '@/components/layout/Privacy';
 import SiteFooter from '@/components/layout/SiteFooter';
 import SiteHeader from '@/components/layout/SiteHeader';
 import { executeQuery } from '@/lib/datocms/executeQuery';
@@ -36,7 +37,7 @@ export default async function BaseLayout({ children, params }: Readonly<LayoutPr
   const { locale } = await params;
   const { isEnabled: isDraftModeEnabled } = await draftMode();
 
-  const { _site, layout } = await executeQuery(LayoutQuery, {
+  const { _site, layout, siteSetting } = await executeQuery(LayoutQuery, {
     variables: { locale: toSiteLocale(locale) },
     includeDrafts: isDraftModeEnabled,
   });
@@ -62,6 +63,7 @@ export default async function BaseLayout({ children, params }: Readonly<LayoutPr
       />
       <main>{children}</main>
       <SiteFooter data={layout} locale={toSiteLocale(locale)} />
+      <Privacy data={siteSetting} />
     </>
   );
 }

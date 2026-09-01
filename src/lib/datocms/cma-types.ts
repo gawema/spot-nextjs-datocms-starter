@@ -90,8 +90,14 @@ export type SiteSetting = ItemTypeDefinition<
   EnvironmentSettings,
   'Io51E491RmKvwEJAbiWkaQ',
   {
+    cid: {
+      type: 'string';
+    };
     translations: {
       type: 'json';
+    };
+    gtm: {
+      type: 'string';
     };
   }
 >;
