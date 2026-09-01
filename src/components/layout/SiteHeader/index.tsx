@@ -1,10 +1,11 @@
 import '@/components/layout/SiteHeader/index.css';
 import Link from '@/components/blocks/Link';
 import DraftModeToggler from '@/components/dev/DraftModeToggler';
+import LocaleSwitcher, { type SlugsByLocale } from '@/components/layout/LocaleSwitcher';
 import MenuPanel from '@/components/layout/SiteHeader/MenuPanel';
 import { SiteHeaderFragment } from '@/components/layout/SiteHeader/fragment';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
-import { SUPPORTED_LOCALES, type SiteLocale, localizePathname } from '@/lib/i18n/locales';
+import { type SiteLocale, localizePathname } from '@/lib/i18n/locales';
 import { getTranslations } from 'next-intl/server';
 import NextLink from 'next/link';
 
@@ -28,10 +29,17 @@ type Props = {
   data: FragmentOf<typeof SiteHeaderFragment> | null;
   siteName: string | null;
   locale: SiteLocale;
+  pages: SlugsByLocale[];
   isDraftModeEnabled: boolean;
 };
 
-export default async function SiteHeader({ data, siteName, locale, isDraftModeEnabled }: Props) {
+export default async function SiteHeader({
+  data,
+  siteName,
+  locale,
+  pages,
+  isDraftModeEnabled,
+}: Props) {
   const t = await getTranslations();
   const layout = data ? readFragment(SiteHeaderFragment, data) : null;
   const logo = layout?.logo;
@@ -101,18 +109,7 @@ export default async function SiteHeader({ data, siteName, locale, isDraftModeEn
         ) : null}
 
         <div className="site-header__end">
-          <nav className="site-header__locales" aria-label={t('t_nav_language')}>
-            {SUPPORTED_LOCALES.map((supported) => (
-              <NextLink
-                key={supported}
-                href={localizePathname('/', supported)}
-                hrefLang={supported}
-                aria-current={supported === locale ? 'true' : undefined}
-              >
-                {supported.toUpperCase()}
-              </NextLink>
-            ))}
-          </nav>
+          <LocaleSwitcher label={t('t_nav_language')} locale={locale} pages={pages} />
 
           <DraftModeToggler
             draftModeEnabled={isDraftModeEnabled}

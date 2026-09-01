@@ -1,5 +1,5 @@
 import { executeQuery } from '@/lib/datocms/executeQuery';
-import { pagePathname } from '@/lib/datocms/gqlUrlBuilder/page';
+import { pagePathname } from '@/lib/routing/pagePath';
 import { isSupportedLocale } from '@/lib/i18n/locales';
 import { SitemapQuery } from '@/lib/query/sitemapQuery';
 import { absoluteUrl } from '@/lib/seo/site';

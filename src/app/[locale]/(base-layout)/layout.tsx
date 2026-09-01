@@ -38,7 +38,7 @@ export default async function BaseLayout({ children, params }: Readonly<LayoutPr
   const { locale } = await params;
   const { isEnabled: isDraftModeEnabled } = await draftMode();
 
-  const { _site, layout, siteSetting } = await executeQuery(LayoutQuery, {
+  const { _site, layout, siteSetting, allPages } = await executeQuery(LayoutQuery, {
     variables: { locale: toSiteLocale(locale) },
     includeDrafts: isDraftModeEnabled,
   });
@@ -66,6 +66,11 @@ export default async function BaseLayout({ children, params }: Readonly<LayoutPr
       </noscript>
       <SiteHeader
         data={layout}
+        pages={allPages.map((page) =>
+          Object.fromEntries(
+            (page._allSlugLocales ?? []).map(({ locale: l, value }) => [l, value]),
+          ),
+        )}
         siteName={_site.globalSeo?.siteName ?? null}
         locale={toSiteLocale(locale)}
         isDraftModeEnabled={isDraftModeEnabled}

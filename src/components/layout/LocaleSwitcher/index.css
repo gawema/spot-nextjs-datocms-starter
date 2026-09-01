@@ -1,0 +1,15 @@
+.locale-switcher {
+  display: flex;
+  gap: var(--spacing-space-small);
+}
+
+.locale-switcher a {
+  color: var(--text-muted);
+  font-size: var(--font-size-text-small);
+  text-decoration: none;
+}
+
+.locale-switcher a[aria-current] {
+  color: var(--text-body);
+  font-weight: var(--font-weight-textbutton-small);
+}

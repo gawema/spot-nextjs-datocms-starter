@@ -1,5 +1,6 @@
 import { type FragmentOf, graphql, readFragment } from '@/lib/datocms/graphql';
-import { type SiteLocale, localizePathname } from '@/lib/i18n/locales';
+import type { SiteLocale } from '@/lib/i18n/locales';
+import { pagePathname } from '@/lib/routing/pagePath';
 
 /**
  * Per-model URL builder for `PageRecord`: the single source of truth for
@@ -9,31 +10,15 @@ import { type SiteLocale, localizePathname } from '@/lib/i18n/locales';
  * compose the fragment, never raw fields, so the URL shape can grow (e.g. to
  * `/[year]/[slug]`) without touching any caller. The builder accepts the masked
  * fragment and unmasks internally.
+ *
+ * The rule itself lives in `lib/routing/pagePath`, which has no GraphQL
+ * dependency, because the locale switcher needs it on the client too.
  */
-
-/**
- * The page whose slug is this is served at the site root. Both the route and
- * this builder read the constant, so `/` stays the only URL for that record.
- */
-export const HOME_SLUG = 'home';
-
 export const PageUrlFragment = graphql(/* GraphQL */ `
   fragment PageUrlFragment on PageRecord {
     slug
   }
 `);
-
-/**
- * The path of a page, given its slug in that language. Callers that hold a
- * record use `buildUrlForPage`; the sitemap, which reads raw slugs per locale,
- * uses this directly.
- *
- * `slug` is localized, so it already comes back in the queried locale: only the
- * prefix is left to add, and the default locale carries none.
- */
-export function pagePathname(slug: string, locale: SiteLocale): string {
-  return localizePathname(slug === HOME_SLUG ? '/' : `/${slug}`, locale);
-}
 
 export function buildUrlForPage(page: FragmentOf<typeof PageUrlFragment>, locale: SiteLocale) {
   return pagePathname(readFragment(PageUrlFragment, page).slug, locale);

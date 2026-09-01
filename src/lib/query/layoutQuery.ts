@@ -30,6 +30,14 @@ export const LayoutQuery = graphql(
       siteSetting {
         ...PrivacyFragment
       }
+      # Every page's slug in every language, so the locale switcher can send a
+      # visitor to the translation of the page they are on.
+      allPages(first: 100) {
+        _allSlugLocales {
+          locale
+          value
+        }
+      }
     }
   `,
   [TagFragment, SiteHeaderFragment, SiteFooterFragment, PrivacyFragment],

@@ -1,4 +1,4 @@
-import { HOME_SLUG } from '@/lib/datocms/gqlUrlBuilder/page';
+import { HOME_SLUG } from '@/lib/routing/pagePath';
 import { generatePageComponentAndMetadataFn } from '@/lib/datocms/realtime/generatePageComponentAndMetadataFn';
 import { toSiteLocale } from '@/lib/i18n/params';
 import { PageQuery } from '@/lib/query/pageQuery';
