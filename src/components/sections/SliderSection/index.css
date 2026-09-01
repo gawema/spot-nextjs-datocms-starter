@@ -2,23 +2,10 @@
   margin-block-end: var(--spacing-space-large);
 }
 
-.slider {
-  display: flex;
-  gap: var(--viewport-grid-gutter);
-  list-style: none;
-  margin-block-end: 0;
-  overflow-x: auto;
-  padding-block-end: var(--spacing-space-medium);
-  padding-inline-start: 0;
-  scroll-snap-type: x mandatory;
-  scrollbar-color: var(--bg-border) transparent;
-  scrollbar-width: thin;
-}
-
+/* The carousel drags whatever width the slides declare here. */
 .slider__slide {
-  flex: 0 0 min(28rem, 85%);
-  margin-block-start: 0;
-  scroll-snap-align: start;
+  flex-basis: min(28rem, 80%);
+  margin-block-end: 0;
 }
 
 .slider__slide img {
@@ -28,6 +15,5 @@
 .slider__caption {
   color: var(--text-muted);
   font-size: var(--font-size-text-small);
-  margin-block: var(--spacing-space-extra-small) 0;
-  max-width: none;
+  margin-block-start: var(--spacing-space-extra-small);
 }

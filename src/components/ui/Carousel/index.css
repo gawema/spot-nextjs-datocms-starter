@@ -1,0 +1,80 @@
+.carousel__viewport {
+  overflow: hidden;
+}
+
+.carousel__track {
+  display: flex;
+  gap: var(--viewport-grid-gutter);
+}
+
+/*
+ * Embla drags the track, so a slide must not shrink and must not be told a
+ * width from here: the section that uses the carousel sets its own basis.
+ */
+.carousel__track > * {
+  flex: 0 0 auto;
+  min-width: 0;
+}
+
+.carousel__controls {
+  align-items: center;
+  display: flex;
+  gap: var(--spacing-space-medium);
+  justify-content: space-between;
+  margin-block-start: var(--spacing-space-medium);
+}
+
+.carousel__dots {
+  display: flex;
+  gap: var(--spacing-space-extra-small);
+}
+
+.carousel__dot {
+  background: var(--bg-border);
+  block-size: 0.5rem;
+  border: none;
+  border-radius: var(--corner-radius-full);
+  cursor: pointer;
+  inline-size: 0.5rem;
+  padding: 0;
+  transition:
+    background-color var(--motion-duration-fast) var(--motion-ease-out),
+    inline-size var(--motion-duration-fast) var(--motion-ease-out);
+}
+
+.carousel__dot.is-selected {
+  background: var(--bg-accent);
+  inline-size: 1.5rem;
+}
+
+.carousel__arrows {
+  display: flex;
+  gap: var(--spacing-space-extra-small);
+}
+
+.carousel__arrow {
+  align-items: center;
+  border: 1px solid var(--bg-border);
+  border-radius: var(--corner-radius-full);
+  color: var(--text-body);
+  cursor: pointer;
+  display: inline-flex;
+  height: 2.5rem;
+  justify-content: center;
+  transition: border-color var(--motion-duration-fast) var(--motion-ease-out);
+  width: 2.5rem;
+}
+
+.carousel__arrow svg {
+  height: 1rem;
+  width: 1rem;
+}
+
+.carousel__arrow:hover:not(:disabled) {
+  border-color: var(--text-body);
+}
+
+.carousel__arrow:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
