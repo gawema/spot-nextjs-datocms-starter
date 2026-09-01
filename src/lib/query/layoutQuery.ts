@@ -1,4 +1,5 @@
 import { PrivacyFragment } from '@/components/layout/Privacy/fragment';
+import { SiteStructuredDataFragment } from '@/components/seo/SiteStructuredData/fragment';
 import { SiteFooterFragment } from '@/components/layout/SiteFooter/fragment';
 import { SiteHeaderFragment } from '@/components/layout/SiteHeader/fragment';
 import { TagFragment } from '@/lib/datocms/commonFragments';
@@ -26,6 +27,7 @@ export const LayoutQuery = graphql(
       layout(locale: $locale, fallbackLocales: [de]) {
         ...SiteHeaderFragment
         ...SiteFooterFragment
+        ...SiteStructuredDataFragment
       }
       siteSetting {
         ...PrivacyFragment
@@ -41,5 +43,11 @@ export const LayoutQuery = graphql(
       }
     }
   `,
-  [TagFragment, SiteHeaderFragment, SiteFooterFragment, PrivacyFragment],
+  [
+    TagFragment,
+    SiteHeaderFragment,
+    SiteFooterFragment,
+    SiteStructuredDataFragment,
+    PrivacyFragment,
+  ],
 );

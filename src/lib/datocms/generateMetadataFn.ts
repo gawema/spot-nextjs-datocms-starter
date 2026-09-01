@@ -31,11 +31,17 @@ export function generateMetadataFn<PageProps, Result, Variables>(
     ]);
 
     const tags = options.pickSeoMetaTags(data as Result);
+    const routeMetadata = toNextMetadata(tags || []);
+    const urls = await options.pickUrls?.(data as Result, pageProps);
 
     // Combine metadata from parent routes with those of this route:
     return {
       ...(parentMetadata as Metadata),
-      ...toNextMetadata(tags || []),
+      ...routeMetadata,
+      ...(urls && {
+        alternates: { canonical: urls.canonical, languages: urls.languages },
+        openGraph: { ...routeMetadata.openGraph, url: urls.canonical },
+      }),
     };
   };
 }
@@ -54,4 +60,19 @@ export type GenerateMetadataFnOptions<PageProps, Result, Variables> = {
 
   /** A callback that picks the SEO meta tags from the result of the query. */
   pickSeoMetaTags: (data: Result) => TitleMetaLinkTag[] | SeoOrFaviconTag[] | undefined;
+
+  /**
+   * The absolute URLs of this page. DatoCMS emits no canonical link of its own,
+   * and a localized site needs one, plus an hreflang alternate per translation.
+   */
+  pickUrls?: (
+    data: Result,
+    context: PageProps,
+  ) => PageUrls | Promise<PageUrls | undefined> | undefined;
+};
+
+export type PageUrls = {
+  canonical: string;
+  /** Locale (or `x-default`) to absolute URL. */
+  languages?: Record<string, string>;
 };

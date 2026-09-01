@@ -16,11 +16,22 @@ import { graphql } from '@/lib/datocms/graphql';
 export const PageQuery = graphql(
   /* GraphQL */ `
     query PageQuery($filter: PageModelFilter!, $locale: SiteLocale!) {
+      _site {
+        globalSeo(locale: $locale, fallbackLocales: [de]) {
+          siteName
+        }
+      }
       page(filter: $filter, locale: $locale) {
         _seoMetaTags {
           ...TagFragment
         }
         title
+        isHome
+        # The canonical URL and the hreflang alternates are built from these.
+        _allSlugLocales {
+          locale
+          value
+        }
         sections {
           ...SectionsFragment
         }
@@ -29,3 +40,19 @@ export const PageQuery = graphql(
   `,
   [TagFragment, SectionsFragment],
 );
+
+/**
+ * The site root is the page flagged as the home, and every other URL is a slug.
+ * The home is excluded from the slug lookup, so its own slug is a 404 rather
+ * than a second URL for the same page.
+ *
+ * Identifying the home by a flag and not by a magic slug is deliberate: a slug
+ * is translatable, and an automatic translation of it once took the root down.
+ */
+export function pageFilter(segments: string[] | undefined) {
+  if (!segments) {
+    return { isHome: { eq: true } };
+  }
+
+  return { slug: { eq: segments.join('/') }, isHome: { eq: false } };
+}

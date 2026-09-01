@@ -74,6 +74,28 @@ its wording taken from the CMS like the rest of the interface.
 
 Internal pages, excluded from search results: `/typography`, `/spacing`, `/ui`.
 
+## SEO
+
+DatoCMS gives the title, the description and the social tags through
+`_seoMetaTags`, which a project's editors control per page. Four things it does not
+give, and the starter adds:
+
+- **A canonical link and `og:url`** on every page, built by the route from the URL it
+  answers on, through the `pickUrls` option of `generateMetadataFn`.
+- **hreflang alternates**, one per existing translation plus `x-default` pointing at the
+  default locale, built from the page's slug in each language. They are in the `<head>` and
+  in the sitemap, which cross-links the same set.
+- **JSON-LD**, in two halves joined by `@id`: `Organization` and `WebSite` from the layout
+  on every page, `WebPage` plus a breadcrumb from the route. `src/lib/seo/structuredData.ts`
+  is deliberately small: a project that needs `LocalBusiness`, `Event` or `Product` adds the
+  node there and points at it from the page node's `about`.
+- **`robots.txt` and the sitemap**, generated from the CMS, with `SITE_LIVE=false`
+  disallowing everything while the domain still serves the old site.
+
+The page graph is rendered from the route and always from published content, because in
+draft mode the content component runs in the browser, where there is no site origin to
+build an absolute URL from.
+
 ## What is inside
 
 Three layers. Keep them apart in your head:

@@ -1,6 +1,9 @@
+import PageStructuredData from '@/components/seo/PageStructuredData';
 import { generatePageComponentAndMetadataFn } from '@/lib/datocms/realtime/generatePageComponentAndMetadataFn';
 import { toSiteLocale } from '@/lib/i18n/params';
-import { PageQuery } from '@/lib/query/pageQuery';
+import { PageQuery, pageFilter } from '@/lib/query/pageQuery';
+import { toPageAlternates } from '@/lib/routing/pageAlternates';
+import { canonicalPageUrl, languageUrls } from '@/lib/seo/pageUrls';
 import dynamic from 'next/dynamic';
 import Content, { type PageProps } from './Content';
 
@@ -18,32 +21,43 @@ import Content, { type PageProps } from './Content';
  * @see src/app/api/invalidate-cache/route.tsx for the webhook
  */
 
-/**
- * The site root is the page flagged as the home, and every other URL is a slug.
- * The home is excluded from the slug lookup, so its own slug is a 404 rather
- * than a second URL for the same page.
- *
- * Identifying the home by a flag and not by a magic slug is deliberate: a slug
- * is translatable, and an automatic translation of it once took the root down.
- */
-function toFilter(segments: string[] | undefined) {
-  if (!segments) {
-    return { isHome: { eq: true } };
-  }
-
-  return { slug: { eq: segments.join('/') }, isHome: { eq: false } };
-}
-
 const { generateMetadataFn, Page } = generatePageComponentAndMetadataFn({
   query: PageQuery,
   buildQueryVariables: async ({ params }: PageProps) => {
     const { locale, slug } = await params;
-    return { filter: toFilter(slug), locale: toSiteLocale(locale) };
+    return { filter: pageFilter(slug), locale: toSiteLocale(locale) };
   },
   pickSeoMetaTags: (data) => data.page?._seoMetaTags,
+  /*
+   * DatoCMS emits no canonical link, so the route says where it lives, and the
+   * page's slug in every language becomes the hreflang alternates.
+   */
+  pickUrls: async (data, { params }: PageProps) => {
+    const { locale, slug } = await params;
+    const siteLocale = toSiteLocale(locale);
+    const canonical = canonicalPageUrl(slug, siteLocale);
+
+    if (!data.page) {
+      return { canonical };
+    }
+
+    const alternates = toPageAlternates(data.page.isHome, data.page._allSlugLocales ?? []);
+
+    return { canonical, languages: languageUrls(alternates) };
+  },
   contentComponent: Content,
   realtimeComponent: dynamic(() => import('./RealTime')),
 });
 
 export const generateMetadata = generateMetadataFn;
-export default Page;
+
+export default async function PageRoute(props: PageProps) {
+  const { locale, slug } = await props.params;
+
+  return (
+    <>
+      <Page {...props} />
+      <PageStructuredData locale={toSiteLocale(locale)} segments={slug} />
+    </>
+  );
+}

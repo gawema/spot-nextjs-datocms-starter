@@ -3,6 +3,7 @@ import PageTransition from '@/components/layout/PageTransition';
 import Privacy from '@/components/layout/Privacy';
 import SiteFooter from '@/components/layout/SiteFooter';
 import SiteHeader from '@/components/layout/SiteHeader';
+import SiteStructuredData from '@/components/seo/SiteStructuredData';
 import { executeQuery } from '@/lib/datocms/executeQuery';
 import { toSiteLocale } from '@/lib/i18n/params';
 import { toPageAlternates } from '@/lib/routing/pageAlternates';
@@ -65,6 +66,11 @@ export default async function BaseLayout({ children, params }: Readonly<LayoutPr
       <noscript>
         <style>{'.section-container { opacity: 1 !important; transform: none !important; }'}</style>
       </noscript>
+      <SiteStructuredData
+        data={layout}
+        locale={toSiteLocale(locale)}
+        siteName={_site.globalSeo?.siteName ?? null}
+      />
       <SiteHeader
         data={layout}
         pages={allPages.map((page) => toPageAlternates(page.isHome, page._allSlugLocales ?? []))}
