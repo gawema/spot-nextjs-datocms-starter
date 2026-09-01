@@ -41,8 +41,10 @@ DatoCMS template project **SPOT Nextjs DatoCMS starter** (project id `225924`).
    plugin, and the draft-mode URL.
 
 5. Set `NEXT_PUBLIC_SITE_URL` once the domain is known, keep `SITE_LIVE=false` while it
-   still points at the old website, and set the project's locales. Then delete what the
-   client does not need: deleting is cheaper and safer than generating.
+   still points at the old website, and set the project's locales. In the project's SEO
+   preferences, replace the fallback social image: the template ships one of its sample
+   photos, so without this every share of the new site is a stock mountain. Then delete what
+   the client does not need: deleting is cheaper and safer than generating.
 
 6. Fill the two singletons in the CMS: **Layout** (logo, navigation, footer) and
    **Settings** (the interface wording, and the privacy client id once the site is
@@ -96,6 +98,12 @@ give, and the starter adds:
   node there and points at it from the page node's `about`.
 - **`robots.txt` and the sitemap**, generated from the CMS, with `SITE_LIVE=false`
   disallowing everything while the domain still serves the old site.
+- **A social image that always resolves**: the project's SEO preferences carry a fallback
+  image, so a page whose SEO tab is empty still shares with a picture. Replace it per
+  project, see step 5.
+- **Alt text as a validator**: every image field requires it, so an editor cannot publish a
+  gallery that is invisible to a screen reader and to image search. The logo is the
+  exception, the header falls back to the site name.
 - **A place for the legacy URLs**: `redirects.mjs` holds the old site's paths and any
   retired domain, and `next.config.mjs` turns them into permanent redirects that run before
   the locale routing. It ships empty, with the reasoning in the comments, including why a
