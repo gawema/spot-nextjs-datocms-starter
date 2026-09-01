@@ -7,6 +7,7 @@ import {
   localizePathname,
   stripLocalePrefix,
 } from '@/lib/i18n/locales';
+import type { PageAlternates } from '@/lib/routing/pageAlternates';
 import { pagePathname } from '@/lib/routing/pagePath';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -22,11 +23,6 @@ import { usePathname } from 'next/navigation';
  * A path that is not a page record, the styleguide or a 404, matches nothing and
  * falls back to the home of the chosen language.
  */
-
-export type PageAlternates = {
-  isHome: boolean;
-  slugs: Partial<Record<SiteLocale, string>>;
-};
 
 type Props = {
   label: string;

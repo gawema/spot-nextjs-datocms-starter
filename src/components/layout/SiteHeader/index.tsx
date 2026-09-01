@@ -1,11 +1,12 @@
 import '@/components/layout/SiteHeader/index.css';
 import Link from '@/components/blocks/Link';
 import DraftModeToggler from '@/components/dev/DraftModeToggler';
-import LocaleSwitcher, { type PageAlternates } from '@/components/layout/LocaleSwitcher';
+import LocaleSwitcher from '@/components/layout/LocaleSwitcher';
 import MenuPanel from '@/components/layout/SiteHeader/MenuPanel';
 import { SiteHeaderFragment } from '@/components/layout/SiteHeader/fragment';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { type SiteLocale, localizePathname } from '@/lib/i18n/locales';
+import type { PageAlternates } from '@/lib/routing/pageAlternates';
 import { getTranslations } from 'next-intl/server';
 import NextLink from 'next/link';
 

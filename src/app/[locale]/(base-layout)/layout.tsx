@@ -5,6 +5,7 @@ import SiteFooter from '@/components/layout/SiteFooter';
 import SiteHeader from '@/components/layout/SiteHeader';
 import { executeQuery } from '@/lib/datocms/executeQuery';
 import { toSiteLocale } from '@/lib/i18n/params';
+import { toPageAlternates } from '@/lib/routing/pageAlternates';
 import { LayoutQuery } from '@/lib/query/layoutQuery';
 import { SITE_URL } from '@/lib/seo/site';
 import { draftMode } from 'next/headers';
@@ -66,11 +67,7 @@ export default async function BaseLayout({ children, params }: Readonly<LayoutPr
       </noscript>
       <SiteHeader
         data={layout}
-        pages={allPages.map((page) =>
-          Object.fromEntries(
-            (page._allSlugLocales ?? []).map(({ locale: l, value }) => [l, value]),
-          ),
-        )}
+        pages={allPages.map((page) => toPageAlternates(page.isHome, page._allSlugLocales ?? []))}
         siteName={_site.globalSeo?.siteName ?? null}
         locale={toSiteLocale(locale)}
         isDraftModeEnabled={isDraftModeEnabled}
