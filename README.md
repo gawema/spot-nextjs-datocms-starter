@@ -53,6 +53,11 @@ DatoCMS template project **SPOT Nextjs DatoCMS starter** (project id `225924`).
    switch, but not the schema or the project settings. Check the role exists on the new
    project: whether it survives the deploy-flow copy is not yet verified.
 
+8. **Before switching the DNS, fill `redirects.mjs`.** The site replaces an existing one,
+   and the day the domain moves every URL Google has indexed either lands somewhere or
+   404s. Build the map from the old site's sitemaps, not from memory, and add any retired
+   domain to the Vercel project so its rules can be served.
+
 ## Routing and locales
 
 Every page lives under `src/app/[locale]`. German is the default and is served unprefixed,
@@ -91,6 +96,10 @@ give, and the starter adds:
   node there and points at it from the page node's `about`.
 - **`robots.txt` and the sitemap**, generated from the CMS, with `SITE_LIVE=false`
   disallowing everything while the domain still serves the old site.
+- **A place for the legacy URLs**: `redirects.mjs` holds the old site's paths and any
+  retired domain, and `next.config.mjs` turns them into permanent redirects that run before
+  the locale routing. It ships empty, with the reasoning in the comments, including why a
+  blanket `/:path*` rule on your own domain is a mistake.
 
 The page graph is rendered from the route and always from published content, because in
 draft mode the content component runs in the browser, where there is no site origin to
