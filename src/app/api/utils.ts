@@ -1,6 +1,4 @@
-import { ApiError } from '@datocms/cma-client';
 import { NextResponse } from 'next/server';
-import { serializeError } from 'serialize-error';
 
 export function withCORS(responseInit?: ResponseInit): ResponseInit {
   return {
@@ -26,12 +24,12 @@ export const PLACEHOLDER_API_TOKEN = 'CHANGE-ME-BEFORE-GOING-LIVE';
  * Guards the route handlers that DatoCMS calls. Returns the response to send
  * back when the request must be refused, or `null` when it may proceed.
  */
-export function rejectUnauthorizedRequest(token: string | null) {
+export function rejectUnauthorizedRequest(token: string | null | undefined) {
   const expected = process.env.SECRET_API_TOKEN;
 
   if (!expected || expected === PLACEHOLDER_API_TOKEN) {
     return invalidRequestResponse(
-      'SECRET_API_TOKEN is missing or still the placeholder from datocms.json. Set a real random value in the hosting environment, then update the token in the URLs of the DatoCMS plugins and webhooks that call this route.',
+      'SECRET_API_TOKEN is missing or still the placeholder from datocms.json. Set a real random value in the hosting environment, then update the token in the DatoCMS plugins and webhooks that call this route: as a header where they send one, in the URL where they cannot.',
       500,
     );
   }
@@ -44,25 +42,9 @@ export function rejectUnauthorizedRequest(token: string | null) {
 }
 
 export function handleUnexpectedError(error: unknown) {
-  try {
-    throw error;
-  } catch (e) {
-    console.error(e);
-  }
+  console.error(error);
 
-  if (error instanceof ApiError) {
-    return NextResponse.json(
-      {
-        success: false,
-        error: error.message,
-        request: error.request,
-        response: error.response,
-      },
-      withCORS({ status: 500 }),
-    );
-  }
-
-  return invalidRequestResponse(serializeError(error), 500);
+  return invalidRequestResponse('Internal server error', 500);
 }
 
 export function invalidRequestResponse(error: unknown, status = 422) {

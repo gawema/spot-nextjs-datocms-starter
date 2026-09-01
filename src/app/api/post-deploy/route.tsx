@@ -1,6 +1,11 @@
 import { type Client, buildClient } from '@datocms/cma-client';
 import type { NextRequest, NextResponse } from 'next/server';
-import { handleUnexpectedError, successfulResponse, withCORS } from '../utils';
+import {
+  handleUnexpectedError,
+  invalidRequestResponse,
+  successfulResponse,
+  withCORS,
+} from '../utils';
 
 /*
  * This endpoint is called only once, immediately after the initial deployment of
@@ -26,10 +31,10 @@ async function installWebPreviewsPlugin(client: Client, baseUrl: string) {
       frontends: [
         {
           name: 'Production',
-          previewWebhook: new URL(
-            `/api/preview-links?token=${process.env.SECRET_API_TOKEN}`,
-            baseUrl,
-          ).toString(),
+          previewWebhook: new URL('/api/preview-links', baseUrl).toString(),
+          customHeaders: [
+            { name: 'Authorization', value: `Bearer ${process.env.SECRET_API_TOKEN}` },
+          ],
           visualEditing: {
             enableDraftModeUrl: new URL(
               `/api/draft-mode/enable?token=${process.env.SECRET_API_TOKEN}`,
@@ -56,10 +61,8 @@ async function installSEOAnalysisPlugin(client: Client, baseUrl: string) {
 
   await client.plugins.update(seoPlugin.id, {
     parameters: {
-      htmlGeneratorUrl: new URL(
-        `/api/seo-analysis?token=${process.env.SECRET_API_TOKEN}`,
-        baseUrl,
-      ).toString(),
+      htmlGeneratorUrl: new URL('/api/seo-analysis', baseUrl).toString(),
+      customHeaders: [{ name: 'Authorization', value: `Bearer ${process.env.SECRET_API_TOKEN}` }],
       autoApplyToFieldsWithApiKey: 'seo_analysis',
       setSeoReadabilityAnalysisFieldExtensionId: true,
     },
@@ -72,9 +75,9 @@ async function installSEOAnalysisPlugin(client: Client, baseUrl: string) {
 async function createCacheInvalidationWebhook(client: Client, baseUrl: string) {
   await client.webhooks.create({
     name: '🔄 Invalidate Next.js Cache',
-    url: new URL(`/api/invalidate-cache?token=${process.env.SECRET_API_TOKEN}`, baseUrl).toString(),
+    url: new URL('/api/invalidate-cache', baseUrl).toString(),
     custom_payload: null,
-    headers: {},
+    headers: { Authorization: `Bearer ${process.env.SECRET_API_TOKEN}` },
     events: [
       {
         filters: [],
@@ -87,6 +90,22 @@ async function createCacheInvalidationWebhook(client: Client, baseUrl: string) {
   });
 }
 
+/**
+ * The DatoCMS API token arrives in the request body, so without this check the
+ * endpoint would happily write our SECRET_API_TOKEN into any project a caller
+ * names, and the caller could then read it back from their own project.
+ */
+async function ensureSameProject(client: Client, ourApiToken: string) {
+  const ourClient = buildClient({ apiToken: ourApiToken });
+
+  const [callerProject, ourProject] = await Promise.all([
+    client.site.find(),
+    ourClient.site.find(),
+  ]);
+
+  return callerProject.id === ourProject.id;
+}
+
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const body = await request.json();
 
@@ -94,6 +113,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const baseUrl = body.frontendUrl as string;
 
   try {
+    if (!(await ensureSameProject(client, process.env.DATOCMS_CMA_TOKEN!))) {
+      return invalidRequestResponse('Invalid token', 401);
+    }
+
     await Promise.all([
       installWebPreviewsPlugin(client, baseUrl),
       createCacheInvalidationWebhook(client, baseUrl),

@@ -21,8 +21,8 @@ import { handleUnexpectedError, rejectUnauthorizedRequest, successfulResponse } 
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
-    // Parse query string parameters
-    const token = req.nextUrl.searchParams.get('token');
+    // The token is sent by the webhook as a request header (see /api/post-deploy)
+    const token = req.headers.get('authorization')?.replace(/^Bearer /, '');
 
     // Ensure that the request is coming from a trusted source
     const unauthorized = rejectUnauthorizedRequest(token);

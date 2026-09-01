@@ -26,8 +26,8 @@ type WebPreviewsResponse = {
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
-    // Parse query string parameters
-    const token = request.nextUrl.searchParams.get('token');
+    // The token is sent by the plugin as a request header (see /api/post-deploy)
+    const token = request.headers.get('authorization')?.replace(/^Bearer /, '');
 
     // Ensure that the request is coming from a trusted source
     const unauthorized = rejectUnauthorizedRequest(token);

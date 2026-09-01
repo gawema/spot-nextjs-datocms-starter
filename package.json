@@ -15,8 +15,8 @@
     "prepare": "npx simple-git-hooks && npm run generate-schema && npm run generate-cma-types"
   },
   "dependencies": {
-    "@datocms/cda-client": "^0.2.10",
-    "@datocms/cma-client": "^5.4.18",
+    "@datocms/cda-client": "^0.3.1",
+    "@datocms/cma-client": "^6.1.0",
     "@datocms/content-link": "^0.3.21",
     "@mux/mux-player-react": "^3.13.0",
     "@types/highlight.js": "^10.1.0",
@@ -31,8 +31,7 @@
     "node-html-parser": "^7.0.1",
     "react": "^19",
     "react-datocms": "^8.0.5",
-    "react-dom": "^19",
-    "serialize-error": "^12.0.0"
+    "react-dom": "^19"
   },
   "devDependencies": {
     "@types/jsdom": "^27.0.0",
