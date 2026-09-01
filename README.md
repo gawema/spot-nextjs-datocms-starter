@@ -35,9 +35,10 @@ DatoCMS template project **SPOT Nextjs DatoCMS starter** (project id `225924`).
    node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"
    ```
 
-   Put it in the Vercel env vars and in `.env.local`, then update the token in the URLs of
-   the **Web Previews** plugin and of the cache-invalidation webhook, both of which
-   `post-deploy` wrote with the placeholder inside.
+   Put it in the Vercel env vars and in `.env.local`, then update it wherever
+   `post-deploy` wrote the placeholder: the `Authorization` header of the **Web Previews**
+   plugin, the same header on the cache-invalidation webhook and on the SEO analysis
+   plugin, and the draft-mode URL.
 
 5. Set `NEXT_PUBLIC_SITE_URL` once the domain is known, keep `SITE_LIVE=false` while it
    still points at the old website, and set the project's locales. Then delete what the
@@ -151,9 +152,14 @@ Copy `.env.local.example` to `.env.local` and fill it from the project's API tok
 The **Web Previews** plugin needs three values, all pointing at the deployment that is
 actually serving the site:
 
-- Preview Links API Endpoint: `<origin>/api/preview-links?token=<SECRET_API_TOKEN>`
+- Preview Links API Endpoint: `<origin>/api/preview-links`, plus a custom header
+  `Authorization: Bearer <SECRET_API_TOKEN>`
 - Enable Draft Mode route: `<origin>/api/draft-mode/enable?token=<SECRET_API_TOKEN>`
 - Initial Path: `/`
+
+The secret travels as a header wherever the caller can send one, because a URL is written
+down by every proxy and log in between. The draft-mode route is the exception: a browser
+follows that one, and a browser cannot add a header.
 
 Add a second frontend pointing at `http://localhost:3000` to get the same features while
 developing. With draft mode on, the page subscribes to the Real-time Updates API and edits
