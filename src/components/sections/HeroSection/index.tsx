@@ -26,7 +26,20 @@ export default function HeroSection({ data, locale }: Props) {
     <SectionContainer bleed>
       <div className="hero" data-datocms-content-link-group>
         {image.responsiveImage ? (
-          <ResponsiveImage data={image.responsiveImage} pictureClassName="hero__image" />
+          /*
+           * The sizing goes through `pictureStyle` and `imgStyle` rather than a
+           * class: react-datocms writes its own inline styles on both elements,
+           * and inline is the only thing that wins against inline.
+           *
+           * `priority` because a hero is the largest paint on the page.
+           */
+          <ResponsiveImage
+            data={image.responsiveImage}
+            priority
+            sizes="100vw"
+            pictureStyle={{ position: 'absolute', inset: 0 }}
+            imgStyle={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          />
         ) : null}
 
         <div className="hero__copy">

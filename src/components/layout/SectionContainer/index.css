@@ -15,8 +15,13 @@
   max-width: none;
 }
 
-/* Prose wants a shorter line than a two-column layout does. */
-.section-container__inner :is(p, ul, ol, blockquote) {
+/*
+ * Prose wants a shorter line than a two-column layout does. `:not([class])`
+ * keeps this to actual prose: structured text renders unclassed elements, while
+ * a component list like the image grid or the slider carries a class and must
+ * keep the full width.
+ */
+.section-container__inner :is(p, ul, ol, blockquote):not([class]) {
   max-width: 40rem;
 }
 
@@ -36,6 +41,17 @@
   .section-container.is-in-view {
     opacity: 1;
     transform: none;
+  }
+
+  /*
+   * The first section is above the fold by definition, so hiding it until an
+   * observer has run means the page opens blank for as long as hydration takes.
+   * It paints immediately; the reveal is for what arrives on scroll.
+   */
+  .section-container:first-of-type {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 
   /*

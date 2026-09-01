@@ -7,6 +7,8 @@ export default defineConfig([
   nextTs,
   globalIgnores([
     '**/.next/**',
+    // The dist dir used to build while a dev server holds .next.
+    '**/.next-*/**',
     '**/node_modules/**',
     '.vercel/**',
     // Claude Code worktrees carry their own checkout and build output.

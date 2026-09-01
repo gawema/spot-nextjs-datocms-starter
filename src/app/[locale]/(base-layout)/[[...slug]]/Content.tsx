@@ -27,11 +27,21 @@ const Content: ContentComponentType<PageProps, ResultOf<typeof PageQuery>> = ({ 
     notFound();
   }
 
+  /*
+   * When a hero opens the page it is the headline, so the title is kept for the
+   * document outline and screen readers rather than printed twice.
+   */
+  const opensWithHero = data.page.sections[0]?.__typename === 'HeroSectionRecord';
+
   return (
     <>
-      <SectionContainer className="padding-vertical-large">
-        <h1 className="page-title">{data.page.title}</h1>
-      </SectionContainer>
+      {opensWithHero ? (
+        <h1 className="visually-hidden">{data.page.title}</h1>
+      ) : (
+        <SectionContainer className="padding-vertical-large">
+          <h1 className="page-title">{data.page.title}</h1>
+        </SectionContainer>
+      )}
       <Sections data={data.page.sections} locale={toSiteLocale(locale)} />
     </>
   );
