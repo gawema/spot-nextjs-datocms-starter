@@ -16,7 +16,7 @@ export default function AccordionSection({ data, locale }: Props) {
   const { heading, items } = readFragment(AccordionSectionFragment, data);
 
   return (
-    <SectionContainer className="padding-vertical-main" width="measure">
+    <SectionContainer className="padding-vertical-main" width="content">
       {heading ? <h2 className="accordion-section__heading">{heading}</h2> : null}
       <div className="accordion-section__items">
         {items.map((item) => (
