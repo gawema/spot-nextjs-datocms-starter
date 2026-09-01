@@ -18,8 +18,9 @@
 
   html {
     /*
-     * Root size stays at the browser default, so a visitor's own font-size
-     * preference survives and every rem in the scale means what it says.
+     * Root size stays at the browser default through the whole designed range,
+     * so a visitor's own font-size preference survives and every rem in the
+     * scale means what it says. Above that range fluid.css scales it up.
      */
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
@@ -34,6 +35,8 @@
     letter-spacing: var(--letter-spacing-text-base);
     line-height: var(--line-height-text-base);
     overflow-wrap: break-word;
+    /* Inherited, so paragraphs avoid a one-word last line; headings override it below. */
+    text-wrap: pretty;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
   }
@@ -45,7 +48,16 @@
   h5,
   h6 {
     color: var(--color-neutral-600);
+    font-family: var(--font-family-secondary);
     text-wrap: balance;
+    /*
+     * German compound words are long and headings are the largest type on the
+     * page, so without this a single word overflows its line. The limits keep
+     * hyphenation to words worth breaking.
+     */
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    hyphenate-limit-chars: 8 4 4;
   }
 
   /* The page title, one step above the heading scale. */

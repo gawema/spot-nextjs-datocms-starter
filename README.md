@@ -139,13 +139,26 @@ Three layers. Keep them apart in your head:
 the scale, then the roles that point at it, then the element defaults that read the roles.
 A project replaces the values in `primitives.css` and leaves the names alone.
 
-Two files are generated and must never be hand-edited: `fluid.css` (the `clamp()` steps) and
-`breakpoints.css`, whose scale lives in `src/lib/layout/breakpoints.ts` so CSS and
-TypeScript cannot disagree. CI re-runs both generators and fails if the tree changes.
+Two files are generated and must never be hand-edited: `fluid.css` from
+`src/lib/layout/fluidScale.ts` and `breakpoints.css` from `src/lib/layout/breakpoints.ts`.
+The scales live in TypeScript so CSS, the helpers and the styleguide cannot disagree, and
+CI re-runs both generators and fails if the tree changes.
 
 ```bash
 npm run generate-fluid-tokens && npm run generate-breakpoint-tokens
 ```
+
+**Fluid sizing works in two stages.** Between 375px and 1920px every heading, the lead
+paragraph, the vertical rhythm and the gutters interpolate linearly, Utopia style, so no
+type or spacing needs a media query. Above 1920px the clamps are all pegged to their
+maximum, so the root font size takes over and grows to 2rem at ~3840px, which keeps the
+whole rem-based system in proportion instead of leaving a 1152px column in the middle of a
+4K screen. It is written as `max(1rem, …)` so a visitor who raised their browser font size
+never has it scaled back down. Body copy is the one thing that stays at 16px.
+
+Headings default to `--font-family-secondary`, a serif, with automatic hyphenation because
+German compound words overflow a 96px line. A project swaps the two families in
+`primitives.css` and everything follows.
 
 `/typography`, `/spacing` and `/ui` render the scale and the primitives. Look there before
 inventing a value.

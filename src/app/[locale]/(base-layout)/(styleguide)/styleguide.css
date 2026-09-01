@@ -48,8 +48,9 @@
   display: block;
 }
 
+/* Everything about the display style except the size, which the page sets inline. */
 .styleguide-specimen--display {
-  font-size: var(--font-size-display);
+  font-family: var(--font-family-secondary);
   font-weight: var(--font-weight-display);
   letter-spacing: var(--letter-spacing-display);
   line-height: var(--line-height-display);

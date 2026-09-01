@@ -4,12 +4,22 @@
     --fluid-min-vw: 375;
     --fluid-max-vw: 1920;
 
-    --font-size-display: clamp(3rem, 2.5146rem + 2.0712vw, 5rem); /* 48px→80px, hero / display */
-    --font-size-h1: clamp(2.25rem, 1.9466rem + 1.2945vw, 3.5rem); /* 36px→56px */
-    --font-size-h2: clamp(1.75rem, 1.568rem + 0.7767vw, 2.5rem); /* 28px→40px */
-    --font-size-h3: clamp(1.5rem, 1.409rem + 0.3883vw, 1.875rem); /* 24px→30px */
-    --font-size-h4: clamp(1.25rem, 1.1893rem + 0.2589vw, 1.5rem); /* 20px→24px */
-    --font-size-h5: clamp(1.125rem, 1.0947rem + 0.1294vw, 1.25rem); /* 18px→20px */
+    --font-size-display: clamp(
+      3.25rem,
+      2.5825rem + 2.8479vw,
+      6rem
+    ); /* 52px→96px, hero and page titles */
+    --font-size-h1: clamp(2.5rem, 2.1359rem + 1.5534vw, 4rem); /* 40px→64px */
+    --font-size-h2: clamp(2rem, 1.7573rem + 1.0356vw, 3rem); /* 32px→48px */
+    --font-size-h3: clamp(1.625rem, 1.4733rem + 0.6472vw, 2.25rem); /* 26px→36px */
+    --font-size-h4: clamp(1.375rem, 1.3143rem + 0.2589vw, 1.625rem); /* 22px→26px */
+    --font-size-h5: clamp(1.25rem, 1.2197rem + 0.1294vw, 1.375rem); /* 20px→22px */
+    --font-size-text-large: clamp(
+      1.25rem,
+      1.1893rem + 0.2589vw,
+      1.5rem
+    ); /* 20px→24px, lead paragraphs */
+
     --padding-vertical-small: clamp(1.5rem, 1.3786rem + 0.5178vw, 2rem); /* 24px→32px */
     --padding-vertical-main: clamp(3rem, 2.7573rem + 1.0356vw, 4rem); /* 48px→64px */
     --padding-vertical-large: clamp(6rem, 5.5146rem + 2.0712vw, 8rem); /* 96px→128px */
@@ -21,5 +31,18 @@
       1.5rem
     ); /* 16px→24px */
     --viewport-grid-gutter: clamp(0.75rem, 0.6893rem + 0.2589vw, 1rem); /* 12px→16px */
+  }
+
+  /*
+   * Past the design range every clamp is pegged to its maximum, so the page
+   * keeps stretching while the type stays put and the content looks lost on a
+   * wide screen. Scaling the root instead keeps the whole rem-based system in
+   * proportion. The max() is there so a visitor who raised their own browser
+   * font size never has it scaled back down.
+   */
+  @media (min-width: 1921px) {
+    html {
+      font-size: max(1rem, min(100vw / 120, 2rem));
+    }
   }
 }

@@ -18,33 +18,41 @@
     --font-family-mono:
       ui-monospace, Menlo, Consolas, Monaco, 'Liberation Mono', 'Courier New', monospace;
 
-    /* Headings: sizes are fluid, everything else about them is not. */
-    --font-weight-display: 600;
-    --line-height-display: 1.05;
-    --letter-spacing-display: -0.02em;
+    /*
+     * Headings: sizes are fluid and live in fluid.css, everything else about
+     * them is here. Only 400 and 700 are used, because the fallback serif has
+     * exactly those two weights; a project that adds a variable webfont can
+     * use the steps in between without touching anything else.
+     */
+    --font-weight-display: 400;
+    --line-height-display: 1;
+    --letter-spacing-display: -0.025em;
 
-    --font-weight-h1: 600;
+    --font-weight-h1: 700;
     --line-height-h1: 1.1;
-    --letter-spacing-h1: -0.015em;
+    --letter-spacing-h1: -0.02em;
 
-    --font-weight-h2: 600;
+    --font-weight-h2: 700;
     --line-height-h2: 1.15;
-    --letter-spacing-h2: -0.01em;
+    --letter-spacing-h2: -0.015em;
 
-    --font-weight-h3: 600;
+    --font-weight-h3: 700;
     --line-height-h3: 1.2;
-    --letter-spacing-h3: 0;
+    --letter-spacing-h3: -0.01em;
 
-    --font-weight-h4: 600;
+    --font-weight-h4: 700;
     --line-height-h4: 1.25;
     --letter-spacing-h4: 0;
 
-    --font-weight-h5: 600;
+    --font-weight-h5: 700;
     --line-height-h5: 1.3;
     --letter-spacing-h5: 0;
 
-    /* Body copy stays static: only headings and rhythm scale with the viewport. */
-    --font-size-text-large: 1.25rem;
+    /*
+     * Body copy stays static at 16px: it reads the same on any screen, and it
+     * is the one size a reader may have overridden in the browser. The lead
+     * paragraph is the exception and grows with the headings, see fluid.css.
+     */
     --font-weight-text-large: 400;
     --line-height-text-large: 1.45;
     --letter-spacing-text-large: 0;

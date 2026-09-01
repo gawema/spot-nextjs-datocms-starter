@@ -1,21 +1,25 @@
+import { BREAKPOINTS } from '@/lib/layout/breakpoints';
+import { FLUID_FONT_SIZES, FLUID_MAX_ROOT_REM, FLUID_MIN_VW } from '@/lib/layout/fluidScale';
+
 export const metadata = { title: 'Typography | Styleguide' };
 
 /*
- * The type scale as the tokens define it: heading sizes are fluid, so resize the
- * window and the specimens move; body sizes are static on purpose.
+ * The type scale as the tokens define it. The fluid sizes come from the same
+ * module the CSS is generated from, so this page cannot drift from the tokens:
+ * resize the window and the specimens move with it.
  */
 
-const HEADINGS = [
-  { token: '--font-size-display', range: '48 → 80px', className: 'styleguide-specimen--display' },
-  { token: '--font-size-h1', range: '36 → 56px', tag: 'h1' as const },
-  { token: '--font-size-h2', range: '28 → 40px', tag: 'h2' as const },
-  { token: '--font-size-h3', range: '24 → 30px', tag: 'h3' as const },
-  { token: '--font-size-h4', range: '20 → 24px', tag: 'h4' as const },
-  { token: '--font-size-h5', range: '18 → 20px', tag: 'h5' as const },
-];
+/** How to render each fluid size. A token with no entry gets a plain paragraph. */
+const SPECIMEN: Record<string, { tag?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5'; className?: string }> = {
+  '--font-size-display': { className: 'styleguide-specimen--display' },
+  '--font-size-h1': { tag: 'h1' },
+  '--font-size-h2': { tag: 'h2' },
+  '--font-size-h3': { tag: 'h3' },
+  '--font-size-h4': { tag: 'h4' },
+  '--font-size-h5': { tag: 'h5' },
+};
 
-const BODY = [
-  { token: '--font-size-text-large', size: '20px', role: 'lead paragraphs' },
+const STATIC_SIZES = [
   { token: '--font-size-text-base', size: '16px', role: 'default body copy' },
   { token: '--font-size-text-small', size: '14px', role: 'captions, meta' },
   { token: '--font-size-textbutton-base', size: '16px', role: 'buttons and links' },
@@ -30,21 +34,38 @@ export default function TypographyPage() {
       <h1>Typography</h1>
 
       <section>
-        <h2>Headings</h2>
-        {HEADINGS.map(({ token, range, tag: Tag, className }) => (
-          <div className="styleguide-row" key={token}>
-            <div className="styleguide-row__meta">
-              <span>{token}</span>
-              <span>{range}</span>
+        <h2>Fluid sizes</h2>
+        <p>
+          Every size below interpolates between its two ends across viewports {FLUID_MIN_VW}px to{' '}
+          {BREAKPOINTS['3xl']}px. Past that the clamps are maxed out, so the root font size grows
+          instead, up to {FLUID_MAX_ROOT_REM}rem, and the whole page keeps its proportions on a very
+          wide screen.
+        </p>
+        {FLUID_FONT_SIZES.map(({ name, minPx, maxPx, role }) => {
+          const Tag = SPECIMEN[name]?.tag;
+          return (
+            <div className="styleguide-row" key={name}>
+              <div className="styleguide-row__meta">
+                <span>{name}</span>
+                <span>
+                  {minPx} → {maxPx}px{role ? `, ${role}` : ''}
+                </span>
+              </div>
+              {Tag ? (
+                <Tag>{SAMPLE}</Tag>
+              ) : (
+                <p className={SPECIMEN[name]?.className} style={{ fontSize: `var(${name})` }}>
+                  {SAMPLE}
+                </p>
+              )}
             </div>
-            {Tag ? <Tag>{SAMPLE}</Tag> : <p className={className}>{SAMPLE}</p>}
-          </div>
-        ))}
+          );
+        })}
       </section>
 
       <section>
-        <h2>Body</h2>
-        {BODY.map(({ token, size, role }) => (
+        <h2>Static sizes</h2>
+        {STATIC_SIZES.map(({ token, size, role }) => (
           <div className="styleguide-row" key={token}>
             <div className="styleguide-row__meta">
               <span>{token}</span>
