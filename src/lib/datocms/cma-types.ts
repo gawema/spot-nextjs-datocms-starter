@@ -86,6 +86,20 @@ export const AccordionSection = {
   REF: { type: 'item_type', id: 'GHPlTJWYQL-RItt_mgAzYg' },
 } as const;
 
+export type SiteSetting = ItemTypeDefinition<
+  EnvironmentSettings,
+  'Io51E491RmKvwEJAbiWkaQ',
+  {
+    translations: {
+      type: 'json';
+    };
+  }
+>;
+export const SiteSetting = {
+  ID: 'Io51E491RmKvwEJAbiWkaQ',
+  REF: { type: 'item_type', id: 'Io51E491RmKvwEJAbiWkaQ' },
+} as const;
+
 export type Page = ItemTypeDefinition<
   EnvironmentSettings,
   'JdG722SGTSG_jEB1Jx-0XA',
@@ -254,5 +268,5 @@ export type AnyBlock =
   | ImageBlock
   | VideoBlock
   | Link;
-export type AnyModel = Layout | Page | SchemaMigration;
+export type AnyModel = Layout | SiteSetting | Page | SchemaMigration;
 export type AnyBlockOrModel = AnyBlock | AnyModel;

@@ -5,6 +5,7 @@ import MobileMenu from '@/components/layout/SiteHeader/MobileMenu';
 import { SiteHeaderFragment } from '@/components/layout/SiteHeader/fragment';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { SUPPORTED_LOCALES, type SiteLocale, localizePathname } from '@/lib/i18n/locales';
+import { getTranslations } from 'next-intl/server';
 import NextLink from 'next/link';
 
 /*
@@ -29,7 +30,8 @@ type Props = {
   isDraftModeEnabled: boolean;
 };
 
-export default function SiteHeader({ data, siteName, locale, isDraftModeEnabled }: Props) {
+export default async function SiteHeader({ data, siteName, locale, isDraftModeEnabled }: Props) {
+  const t = await getTranslations();
   const layout = data ? readFragment(SiteHeaderFragment, data) : null;
   const logo = layout?.logo;
 
@@ -53,8 +55,8 @@ export default function SiteHeader({ data, siteName, locale, isDraftModeEnabled 
         </NextLink>
 
         {layout && layout.navigation.length > 0 ? (
-          <MobileMenu label="Menu">
-            <nav className="site-nav" aria-label="Main">
+          <MobileMenu label={t('t_menu')}>
+            <nav className="site-nav" aria-label={t('t_nav_main')}>
               <ul className="site-nav__list">
                 {layout.navigation.map((item) => (
                   <li className="site-nav__item" key={item.id}>
@@ -77,7 +79,7 @@ export default function SiteHeader({ data, siteName, locale, isDraftModeEnabled 
         ) : null}
 
         <div className="site-header__end">
-          <nav className="site-header__locales" aria-label="Language">
+          <nav className="site-header__locales" aria-label={t('t_nav_language')}>
             {SUPPORTED_LOCALES.map((supported) => (
               <NextLink
                 key={supported}
@@ -90,7 +92,11 @@ export default function SiteHeader({ data, siteName, locale, isDraftModeEnabled 
             ))}
           </nav>
 
-          <DraftModeToggler draftModeEnabled={isDraftModeEnabled} />
+          <DraftModeToggler
+            draftModeEnabled={isDraftModeEnabled}
+            enableLabel={t('t_draft_mode_enable')}
+            disableLabel={t('t_draft_mode_disable')}
+          />
         </div>
       </div>
     </header>

@@ -249,4 +249,23 @@
       width: auto !important;
     }
   }
+
+  /* Call-to-action link, used by the link block and the 404 page. */
+  .cms-link {
+    align-items: center;
+    color: var(--text-link);
+    display: inline-flex;
+    font-weight: var(--font-weight-textbutton-base);
+    gap: var(--spacing-space-extra-small);
+    text-decoration: none;
+  }
+
+  .cms-link::after {
+    content: '→';
+    transition: transform var(--motion-duration-fast) var(--motion-ease-out);
+  }
+
+  .cms-link:hover::after {
+    transform: translateX(0.25rem);
+  }
 }

@@ -4,9 +4,11 @@ import Button from '@/components/ui/Button';
 
 type Props = {
   draftModeEnabled: boolean;
+  enableLabel: string;
+  disableLabel: string;
 };
 
-export default function DraftModeToggler({ draftModeEnabled }: Props) {
+export default function DraftModeToggler({ draftModeEnabled, enableLabel, disableLabel }: Props) {
   async function handleClick() {
     let response: Response;
 
@@ -32,14 +34,14 @@ export default function DraftModeToggler({ draftModeEnabled }: Props) {
   if (draftModeEnabled) {
     return (
       <Button variant="outline" size="small" onClick={handleClick}>
-        Disable draft mode
+        {disableLabel}
       </Button>
     );
   }
 
   return (
     <Button variant="outline" size="small" onClick={handleClick}>
-      Enable draft mode
+      {enableLabel}
     </Button>
   );
 }
