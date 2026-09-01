@@ -7,6 +7,14 @@
   max-width: 72rem;
 }
 
+.section-container--bleed {
+  padding-inline: 0;
+}
+
+.section-container--bleed .section-container__inner {
+  max-width: none;
+}
+
 /* Prose wants a shorter line than a two-column layout does. */
 .section-container__inner :is(p, ul, ol, blockquote) {
   max-width: 40rem;

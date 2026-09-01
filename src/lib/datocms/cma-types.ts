@@ -39,6 +39,47 @@ export const AccordionSection = {
   REF: { type: 'item_type', id: 'GHPlTJWYQL-RItt_mgAzYg' },
 } as const;
 
+export type FullImageSection = ItemTypeDefinition<
+  EnvironmentSettings,
+  'Lv51zZ96QfGEd6qx_uOKVQ',
+  {
+    image: {
+      type: 'file';
+    };
+    caption: {
+      type: 'string';
+    };
+  }
+>;
+export const FullImageSection = {
+  ID: 'Lv51zZ96QfGEd6qx_uOKVQ',
+  REF: { type: 'item_type', id: 'Lv51zZ96QfGEd6qx_uOKVQ' },
+} as const;
+
+export type HeroSection = ItemTypeDefinition<
+  EnvironmentSettings,
+  'KyTRgL91Te6FjX_2BeAg7g',
+  {
+    heading: {
+      type: 'string';
+    };
+    body: {
+      type: 'text';
+    };
+    image: {
+      type: 'file';
+    };
+    link: {
+      type: 'single_block';
+      blocks: Link;
+    };
+  }
+>;
+export const HeroSection = {
+  ID: 'KyTRgL91Te6FjX_2BeAg7g',
+  REF: { type: 'item_type', id: 'KyTRgL91Te6FjX_2BeAg7g' },
+} as const;
+
 export type ImageBlock = ItemTypeDefinition<
   EnvironmentSettings,
   'dZOhbVOTSpeaaA-wQMgPCA',
@@ -65,6 +106,23 @@ export type ImageGalleryBlock = ItemTypeDefinition<
 export const ImageGalleryBlock = {
   ID: 'CoOdvsbUR8GLtGeuenXzMw',
   REF: { type: 'item_type', id: 'CoOdvsbUR8GLtGeuenXzMw' },
+} as const;
+
+export type ImageGridSection = ItemTypeDefinition<
+  EnvironmentSettings,
+  'M2XshV_sQSeKMOToYJHjxg',
+  {
+    heading: {
+      type: 'string';
+    };
+    images: {
+      type: 'gallery';
+    };
+  }
+>;
+export const ImageGridSection = {
+  ID: 'M2XshV_sQSeKMOToYJHjxg',
+  REF: { type: 'item_type', id: 'M2XshV_sQSeKMOToYJHjxg' },
 } as const;
 
 export type ImageWithTextSection = ItemTypeDefinition<
@@ -190,7 +248,14 @@ export type Page = ItemTypeDefinition<
     };
     sections: {
       type: 'rich_text';
-      blocks: TextSection | AccordionSection | ImageWithTextSection;
+      blocks:
+        | HeroSection
+        | TextSection
+        | ImageWithTextSection
+        | FullImageSection
+        | ImageGridSection
+        | SliderSection
+        | AccordionSection;
       localized: true;
     };
     slug: {
@@ -244,6 +309,23 @@ export const SiteSetting = {
   REF: { type: 'item_type', id: 'Io51E491RmKvwEJAbiWkaQ' },
 } as const;
 
+export type SliderSection = ItemTypeDefinition<
+  EnvironmentSettings,
+  'a6LyM9ltTn-5IMxW5sWj3Q',
+  {
+    heading: {
+      type: 'string';
+    };
+    images: {
+      type: 'gallery';
+    };
+  }
+>;
+export const SliderSection = {
+  ID: 'a6LyM9ltTn-5IMxW5sWj3Q',
+  REF: { type: 'item_type', id: 'a6LyM9ltTn-5IMxW5sWj3Q' },
+} as const;
+
 export type TextSection = ItemTypeDefinition<
   EnvironmentSettings,
   'AAemZ7YeTUygT1tcKBQgMQ',
@@ -279,11 +361,15 @@ export const VideoBlock = {
 export type AnyBlock =
   | AccordionItem
   | AccordionSection
+  | FullImageSection
+  | HeroSection
   | ImageBlock
   | ImageGalleryBlock
+  | ImageGridSection
   | ImageWithTextSection
   | Link
   | MenuItem
+  | SliderSection
   | TextSection
   | VideoBlock;
 export type AnyModel = Layout | Page | SchemaMigration | SiteSetting;

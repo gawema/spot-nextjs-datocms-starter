@@ -1,0 +1,9 @@
+.full-image {
+  margin-block-end: 0;
+}
+
+.full-image__caption {
+  margin-inline: auto;
+  max-width: 72rem;
+  padding-inline: var(--padding-horizontal-padding-global);
+}

@@ -344,12 +344,67 @@ Represents signed double-precision fractional values as specified by [IEEE 754](
 """
 scalar FloatType
 
+"""Block of type 🏔️ Full Image Section (full_image_section)"""
+type FullImageSectionRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  caption: String
+  id: ItemId!
+  image: FileField!
+}
+
 type GlobalSeoField {
   facebookPageUrl: String
   fallbackSeo: SeoField
   siteName: String
   titleSuffix: String
   twitterAccount: String
+}
+
+"""Block of type ⛰️ Hero Section (hero_section)"""
+type HeroSectionRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  body(
+    """Process content as markdown"""
+    markdown: Boolean
+  ): String
+  heading: String!
+  id: ItemId!
+  image: FileField!
+  link: LinkRecord
 }
 
 """Block of type 🌅 Image (image_block)"""
@@ -497,6 +552,31 @@ type ImageGalleryBlockRecord implements RecordInterface {
   _updatedAt: DateTime!
   assets: [ImageFileField!]!
   id: ItemId!
+}
+
+"""Block of type 🧱 Image Grid Section (image_grid_section)"""
+type ImageGridSectionRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  heading: String
+  id: ItemId!
+  images: [FileField!]!
 }
 
 """Block of type 🖼️ Image with Text Section (image_with_text_section)"""
@@ -2777,7 +2857,7 @@ enum PageModelOrderBy {
   title_DESC
 }
 
-union PageModelSectionsField = AccordionSectionRecord | ImageWithTextSectionRecord | TextSectionRecord
+union PageModelSectionsField = AccordionSectionRecord | FullImageSectionRecord | HeroSectionRecord | ImageGridSectionRecord | ImageWithTextSectionRecord | SliderSectionRecord | TextSectionRecord
 
 type PageModelSectionsFieldListListNonNullMultiLocaleField {
   locale: SiteLocale
@@ -3231,6 +3311,31 @@ type SiteSettingRecord implements RecordInterface {
   gtm: String
   id: ItemId!
   translations: JsonField
+}
+
+"""Block of type 🎠 Slider Section (slider_section)"""
+type SliderSectionRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  heading: String
+  id: ItemId!
+  images: [FileField!]!
 }
 
 """Specifies how to filter Slug fields"""

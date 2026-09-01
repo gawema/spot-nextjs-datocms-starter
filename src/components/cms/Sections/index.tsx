@@ -1,7 +1,15 @@
 import AccordionSection from '@/components/sections/AccordionSection';
+import FullImageSection from '@/components/sections/FullImageSection';
+import { FullImageSectionFragment } from '@/components/sections/FullImageSection/fragment';
+import HeroSection from '@/components/sections/HeroSection';
+import { HeroSectionFragment } from '@/components/sections/HeroSection/fragment';
+import ImageGridSection from '@/components/sections/ImageGridSection';
+import { ImageGridSectionFragment } from '@/components/sections/ImageGridSection/fragment';
 import { AccordionSectionFragment } from '@/components/sections/AccordionSection/fragment';
 import ImageWithTextSection from '@/components/sections/ImageWithTextSection';
 import { ImageWithTextSectionFragment } from '@/components/sections/ImageWithTextSection/fragment';
+import SliderSection from '@/components/sections/SliderSection';
+import { SliderSectionFragment } from '@/components/sections/SliderSection/fragment';
 import TextSection from '@/components/sections/TextSection';
 import { TextSectionFragment } from '@/components/sections/TextSection/fragment';
 import { type ResultOf, graphql } from '@/lib/datocms/graphql';
@@ -26,12 +34,24 @@ export const SectionsFragment = graphql(
         id
         __typename
       }
+      ...HeroSectionFragment
       ...TextSectionFragment
       ...ImageWithTextSectionFragment
+      ...FullImageSectionFragment
+      ...ImageGridSectionFragment
+      ...SliderSectionFragment
       ...AccordionSectionFragment
     }
   `,
-  [TextSectionFragment, ImageWithTextSectionFragment, AccordionSectionFragment],
+  [
+    HeroSectionFragment,
+    TextSectionFragment,
+    ImageWithTextSectionFragment,
+    FullImageSectionFragment,
+    ImageGridSectionFragment,
+    SliderSectionFragment,
+    AccordionSectionFragment,
+  ],
 );
 
 type Section = ResultOf<typeof SectionsFragment>;
@@ -46,10 +66,18 @@ export default function Sections({ data, locale }: Props) {
     <>
       {data.map((section) => {
         switch (section.__typename) {
+          case 'HeroSectionRecord':
+            return <HeroSection key={section.id} data={section} locale={locale} />;
           case 'TextSectionRecord':
             return <TextSection key={section.id} data={section} locale={locale} />;
           case 'ImageWithTextSectionRecord':
             return <ImageWithTextSection key={section.id} data={section} locale={locale} />;
+          case 'FullImageSectionRecord':
+            return <FullImageSection key={section.id} data={section} />;
+          case 'ImageGridSectionRecord':
+            return <ImageGridSection key={section.id} data={section} />;
+          case 'SliderSectionRecord':
+            return <SliderSection key={section.id} data={section} />;
           case 'AccordionSectionRecord':
             return <AccordionSection key={section.id} data={section} locale={locale} />;
           default: {

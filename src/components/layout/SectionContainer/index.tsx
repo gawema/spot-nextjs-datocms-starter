@@ -18,16 +18,23 @@ import { type ReactNode, useRef } from 'react';
 type Props = {
   children: ReactNode;
   className?: string;
+  /** Drops the gutter and the maximum width, for sections that go edge to edge. */
+  bleed?: boolean;
 };
 
-export default function SectionContainer({ children, className }: Props) {
+export default function SectionContainer({ children, className, bleed = false }: Props) {
   const section = useRef<HTMLElement>(null);
   const isInView = useInViewReveal(section);
 
   return (
     <section
       ref={section}
-      className={classList(['section-container', isInView && 'is-in-view', className])}
+      className={classList([
+        'section-container',
+        bleed && 'section-container--bleed',
+        isInView && 'is-in-view',
+        className,
+      ])}
     >
       <div className="section-container__inner">{children}</div>
     </section>
