@@ -19,11 +19,39 @@ export const PageQuery = graphql(
       _site {
         globalSeo(locale: $locale, fallbackLocales: [de]) {
           siteName
+          # The social image, cropped to what the platforms actually want: Dato's
+          # own og:image resizes but never crops, and crop: focalpoint makes imgix
+          # honour the point the editor set on the asset. responsiveImage reports
+          # the size of the result, so the numbers live here and nowhere else.
+          fallbackSeo {
+            image {
+              responsiveImage(
+                imgixParams: { fit: crop, w: 1200, h: 630, crop: focalpoint, auto: format }
+              ) {
+                src
+                width
+                height
+                alt
+              }
+            }
+          }
         }
       }
       page(filter: $filter, locale: $locale) {
         _seoMetaTags {
           ...TagFragment
+        }
+        seoSettingsSocial {
+          image {
+            responsiveImage(
+              imgixParams: { fit: crop, w: 1200, h: 630, crop: focalpoint, auto: format }
+            ) {
+              src
+              width
+              height
+              alt
+            }
+          }
         }
         title
         isHome

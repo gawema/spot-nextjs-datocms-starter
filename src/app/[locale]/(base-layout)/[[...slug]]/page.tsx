@@ -30,20 +30,34 @@ const { generateMetadataFn, Page } = generatePageComponentAndMetadataFn({
   pickSeoMetaTags: (data) => data.page?._seoMetaTags,
   /*
    * DatoCMS emits no canonical link, so the route says where it lives, and the
-   * page's slug in every language becomes the hreflang alternates.
+   * page's slug in every language becomes the hreflang alternates. The social
+   * image is the page's own when it has one, the project's fallback otherwise,
+   * which is the precedence DatoCMS itself uses.
    */
-  pickUrls: async (data, { params }: PageProps) => {
+  pickSeoOverrides: async (data, { params }: PageProps) => {
     const { locale, slug } = await params;
-    const siteLocale = toSiteLocale(locale);
-    const canonical = canonicalPageUrl(slug, siteLocale);
+    const canonical = canonicalPageUrl(slug, toSiteLocale(locale));
+
+    const cropped =
+      data.page?.seoSettingsSocial?.image?.responsiveImage ??
+      data._site.globalSeo?.fallbackSeo?.image?.responsiveImage;
+
+    const socialImage = cropped
+      ? {
+          url: cropped.src,
+          width: cropped.width,
+          height: cropped.height,
+          ...(cropped.alt ? { alt: cropped.alt } : {}),
+        }
+      : undefined;
 
     if (!data.page) {
-      return { canonical };
+      return { canonical, socialImage };
     }
 
     const alternates = toPageAlternates(data.page.isHome, data.page._allSlugLocales ?? []);
 
-    return { canonical, languages: languageUrls(alternates) };
+    return { canonical, languages: languageUrls(alternates), socialImage };
   },
   contentComponent: Content,
   realtimeComponent: dynamic(() => import('./RealTime')),

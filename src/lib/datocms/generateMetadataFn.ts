@@ -32,15 +32,21 @@ export function generateMetadataFn<PageProps, Result, Variables>(
 
     const tags = options.pickSeoMetaTags(data as Result);
     const routeMetadata = toNextMetadata(tags || []);
-    const urls = await options.pickUrls?.(data as Result, pageProps);
+    const overrides = await options.pickSeoOverrides?.(data as Result, pageProps);
+    const image = overrides?.socialImage;
 
     // Combine metadata from parent routes with those of this route:
     return {
       ...(parentMetadata as Metadata),
       ...routeMetadata,
-      ...(urls && {
-        alternates: { canonical: urls.canonical, languages: urls.languages },
-        openGraph: { ...routeMetadata.openGraph, url: urls.canonical },
+      ...(overrides && {
+        alternates: { canonical: overrides.canonical, languages: overrides.languages },
+        openGraph: {
+          ...routeMetadata.openGraph,
+          url: overrides.canonical,
+          ...(image && { images: [image] }),
+        },
+        ...(image && { twitter: { ...routeMetadata.twitter, images: [image] } }),
       }),
     };
   };
@@ -62,17 +68,19 @@ export type GenerateMetadataFnOptions<PageProps, Result, Variables> = {
   pickSeoMetaTags: (data: Result) => TitleMetaLinkTag[] | SeoOrFaviconTag[] | undefined;
 
   /**
-   * The absolute URLs of this page. DatoCMS emits no canonical link of its own,
-   * and a localized site needs one, plus an hreflang alternate per translation.
+   * What DatoCMS does not get right on its own: it emits no canonical link, no
+   * hreflang alternates, and a social image that is resized but never cropped.
    */
-  pickUrls?: (
+  pickSeoOverrides?: (
     data: Result,
     context: PageProps,
-  ) => PageUrls | Promise<PageUrls | undefined> | undefined;
+  ) => SeoOverrides | Promise<SeoOverrides | undefined> | undefined;
 };
 
-export type PageUrls = {
+export type SeoOverrides = {
   canonical: string;
   /** Locale (or `x-default`) to absolute URL. */
   languages?: Record<string, string>;
+  /** Replaces DatoCMS's `og:image` and `twitter:image`. */
+  socialImage?: { url: string; width: number; height: number; alt?: string };
 };

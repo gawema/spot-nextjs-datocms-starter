@@ -42,8 +42,7 @@ DatoCMS template project **SPOT Nextjs DatoCMS starter** (project id `225924`).
 
 5. Set `NEXT_PUBLIC_SITE_URL` once the domain is known, keep `SITE_LIVE=false` while it
    still points at the old website, and set the project's locales. In the project's SEO
-   preferences, replace the fallback social image: the template ships one of its sample
-   photos, so without this every share of the new site is a stock mountain. Then delete what
+   preferences, replace the fallback social image with the client's own. Then delete what
    the client does not need: deleting is cheaper and safer than generating.
 
 6. Fill the two singletons in the CMS: **Layout** (logo, navigation, footer) and
@@ -98,9 +97,13 @@ give, and the starter adds:
   node there and points at it from the page node's `about`.
 - **`robots.txt` and the sitemap**, generated from the CMS, with `SITE_LIVE=false`
   disallowing everything while the domain still serves the old site.
-- **A social image that always resolves**: the project's SEO preferences carry a fallback
-  image, so a page whose SEO tab is empty still shares with a picture. Replace it per
-  project, see step 5.
+- **A social image that always resolves, cropped**: the project's SEO preferences carry a
+  fallback image, so a page whose SEO tab is empty still shares with a picture, and the page's
+  own image wins when it has one. Both are requested at 1200x630 with `crop: focalpoint`, so
+  whatever photo an editor picks becomes a correct preview and DatoCMS adds the asset's focal
+  point to the URL itself. This is why the starter emits `og:image` rather than taking Dato's,
+  which only ever resizes. `responsiveImage` reports the size of the crop, so the dimensions
+  are declared without a magic number in the TypeScript.
 - **Alt text as a validator**: every image field requires it, so an editor cannot publish a
   gallery that is invisible to a screen reader and to image search. The logo is the
   exception, the header falls back to the site name.
