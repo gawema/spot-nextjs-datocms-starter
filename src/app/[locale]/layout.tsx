@@ -1,4 +1,5 @@
 import { isSupportedLocale } from '@/lib/i18n/locales';
+import { NextIntlClientProvider } from 'next-intl';
 import { notFound } from 'next/navigation';
 
 /**
@@ -21,7 +22,19 @@ export default async function RootLayout({
 
   return (
     <html lang={locale}>
-      <body>{children}</body>
+      <body>
+        {/*
+         * The provider carries the interface wording into whatever renders in
+         * the browser. Draft mode renders the page's whole subtree inside a
+         * client component, so without it any section that translates anything
+         * would work when published and throw in the preview.
+         *
+         * Rendered from a server component, so it inherits the locale and the
+         * messages from `src/lib/i18n/request.ts` with nothing to pass. The
+         * catalogue is the interface wording only, under a kilobyte.
+         */}
+        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+      </body>
     </html>
   );
 }

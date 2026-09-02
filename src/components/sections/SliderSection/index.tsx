@@ -3,7 +3,7 @@ import ResponsiveImage from '@/components/media/ResponsiveImage';
 import { SliderSectionFragment } from '@/components/sections/SliderSection/fragment';
 import Carousel from '@/components/ui/Carousel';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
-import { getTranslations } from 'next-intl/server';
+import { useTranslations } from 'next-intl';
 
 import './index.css';
 
@@ -17,10 +17,15 @@ type Props = {
  * The behaviour lives in `ui/Carousel`, which is the only client part: the
  * slides below are rendered on the server and handed to it as children, so the
  * images never reach the browser as JavaScript.
+ *
+ * Synchronous, and translated through `useTranslations` rather than
+ * `getTranslations`: in draft mode this whole subtree is rendered by the
+ * realtime client component, where an async component cannot run and the
+ * server-only translation API throws.
  */
-export default async function SliderSection({ data }: Props) {
+export default function SliderSection({ data }: Props) {
   const { heading, images } = readFragment(SliderSectionFragment, data);
-  const t = await getTranslations();
+  const t = useTranslations();
 
   return (
     <SectionContainer className="padding-vertical-main" width="content">
