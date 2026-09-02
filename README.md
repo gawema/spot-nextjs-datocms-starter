@@ -35,10 +35,18 @@ DatoCMS template project **SPOT Nextjs DatoCMS starter** (project id `225924`).
    node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"
    ```
 
-   Put it in the Vercel env vars and in `.env.local`, then update it wherever
-   `post-deploy` wrote the placeholder: the `Authorization` header of the **Web Previews**
-   plugin, the same header on the cache-invalidation webhook and on the SEO analysis
-   plugin, and the draft-mode URL.
+   Put it in the Vercel env vars and in `.env.local`, redeploy, then call `post-deploy`
+   again to write it everywhere it belongs. It is safe to re-run, and it needs a
+   full-access CMA token in the body because it configures plugins:
+
+   ```bash
+   curl -X POST "$SITE/api/post-deploy" -H 'Content-Type: application/json' -d "{\"datocmsApiToken\":\"$FULL_CMA_TOKEN\",\"frontendUrl\":\"$SITE\"}"
+   ```
+
+   By hand it is four places: the `Authorization` header of the **Web Previews** plugin, the
+   same header on the cache-invalidation webhook and on the SEO analysis plugin, and the
+   draft-mode URL. Read the response either way: `post-deploy` names the step that failed,
+   and the deploy flow does not always surface it.
 
 5. Set `NEXT_PUBLIC_SITE_URL` once the domain is known, keep `SITE_LIVE=false` while it
    still points at the old website, and set the project's locales. In the project's SEO
