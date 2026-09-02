@@ -6,102 +6,9 @@ DatoCMS template project **SPOT Nextjs DatoCMS starter** (project id `225924`).
 
 ## Starting a new client project
 
-1. Open `https://dashboard.datocms.com/deploy?repo=gawema/spot-nextjs-datocms-starter:main`.
-   Name the project after the client and create it under the SPOT organization.
-2. Choose Vercel when asked for hosting. The flow creates the CDA/CMA tokens, injects them
-   as env vars, and calls `/api/post-deploy` to configure the plugins and register the
-   cache-invalidation webhook.
-
-   What the copy brings along, verified on the first client project: every model and block,
-   the demo content, the **applied-migration records** (so `migrations:run` in the new repo
-   replays nothing, and a migration added to this base later applies normally), the
-   **Editor role**, and **the plugins with the template's own settings inside them**. What
-   it does not bring: the webhooks, which `post-deploy` creates, and `.github/`, so a fresh
-   client project has no CI until the merge in step 3 brings it. Give the new repo the two
-   CDA tokens as repository secrets, or the workflows skip themselves.
-
-3. The repo you get is a private **copy, not a fork**, so it shares no history with this
-   base. If you want to be able to pull base updates later, link it right away, before the
-   first edit, while both trees are still identical:
-
-   ```bash
-   git remote add base https://github.com/gawema/spot-nextjs-datocms-starter.git
-   ```
-
-   ```bash
-   git fetch base && git merge base/main --allow-unrelated-histories
-   ```
-
-   The copy is byte-identical to this repo at the moment it was made, so a merge done now
-   conflicts **only** on the files this base has changed since, and on those the base's
-   version is always the right one:
-
-   ```bash
-   git diff --name-only --diff-filter=U
-   ```
-
-   ```bash
-   git checkout --theirs <those files> && git add -A && git commit --no-edit
-   ```
-
-   `git diff base/main --stat` should then print nothing: the two trees match again, and
-   every later difference is a decision rather than a leftover. `--allow-unrelated-histories`
-   is needed this once; from then on it is a plain `git fetch base && git merge base/main`.
-   Done later, after the project has diverged, this is a fight instead of two files.
-
-4. **Point the repo at its own project.** `datocms.config.json` still carries this
-   template's `siteId`, and the migration CLI reads it, so until you change it every
-   `datocms migrations:run` in the client repo runs against the template.
-
-   Then write `.env.local` from `.env.local.example` **before** the first `npm install`:
-   `prepare` runs the schema generators, which need the project's tokens to say anything.
-
-5. **Replace `SECRET_API_TOKEN`.** The deploy flow seeds the literal
-   `CHANGE-ME-BEFORE-GOING-LIVE`, and every route handler DatoCMS calls refuses to work
-   while that value is in place, so draft mode and cache invalidation stay dead until you
-   generate a real one:
-
-   ```bash
-   node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"
-   ```
-
-   Put it in the Vercel env vars and in `.env.local`, **redeploy**, and only then call
-   `post-deploy` again to write it everywhere it belongs. The order is not optional: the
-   route reads the secret from its own deployment's environment, so calling it before the
-   redeploy writes the placeholder back. It is safe to re-run, and it needs a full-access
-   CMA token in the body because it configures plugins:
-
-   ```bash
-   curl -X POST "$SITE/api/post-deploy" -H 'Content-Type: application/json' -d "{\"datocmsApiToken\":\"$FULL_CMA_TOKEN\",\"frontendUrl\":\"$SITE\"}"
-   ```
-
-   By hand it is four places: the `Authorization` header of the **Web Previews** plugin, the
-   same header on the cache-invalidation webhook and on the SEO analysis plugin, and the
-   draft-mode URL. Read the response either way: `post-deploy` names the step that failed,
-   and the deploy flow does not always surface it.
-
-6. Set `NEXT_PUBLIC_SITE_URL` once the domain is known, keep `SITE_LIVE=false` while it
-   still points at the old website, and set the project's locales. In the project's SEO
-   preferences, replace the fallback social image with the client's own. Then delete what
-   the client does not need: deleting is cheaper and safer than generating.
-
-   The **Alt Text AI** plugin arrives with SPOT's trial key, which is capped and shared by
-   every project made from this template. It is there so the plugin works out of the box,
-   not as a project's own: a client that actually uses it gets its own key.
-
-7. Fill the two singletons in the CMS: **Layout** (logo, navigation, footer) and
-   **Settings** (the interface wording, and the privacy client id once the site is
-   registered in `legal.spotagency.ch`). Both come seeded with the template's demo values.
-
-8. Invite the client with the **Editor** role, not as an admin. It can do everything to
-   content and assets and can edit the favicon, the global SEO defaults and the no-index
-   switch, but not the schema or the project settings. It survives the deploy-flow copy, so
-   there is nothing to recreate: check it is there and invite them to it.
-
-9. **Before switching the DNS, fill `redirects.mjs`.** The site replaces an existing one,
-   and the day the domain moves every URL Google has indexed either lands somewhere or
-   404s. Build the map from the old site's sitemaps, not from memory, and add any retired
-   domain to the Vercel project so its rules can be served.
+The runbook lives in [docs/new-project.md](docs/new-project.md): nine steps, once per
+project, in order. It is a separate file because it is read once by one person, while the
+rest of this README is read while working on the code.
 
 ## Routing and locales
 
@@ -126,39 +33,25 @@ Internal pages, excluded from search results: `/typography`, `/spacing`, `/ui`.
 
 ## SEO
 
-DatoCMS gives the title, the description and the social tags through
-`_seoMetaTags`, which a project's editors control per page. Four things it does not
-give, and the starter adds:
+DatoCMS gives the title, the description and the social tags through `_seoMetaTags`, per
+page, in the editors' hands. What the starter adds on top, with the reasoning next to the
+code rather than here:
 
-- **A canonical link and `og:url`** on every page, built by the route from the URL it
-  answers on, through the `pickUrls` option of `generateMetadataFn`.
-- **hreflang alternates**, one per existing translation plus `x-default` pointing at the
-  default locale, built from the page's slug in each language. They are in the `<head>` and
-  in the sitemap, which cross-links the same set.
-- **JSON-LD**, in two halves joined by `@id`: `Organization` and `WebSite` from the layout
-  on every page, `WebPage` plus a breadcrumb from the route. `src/lib/seo/structuredData.ts`
-  is deliberately small: a project that needs `LocalBusiness`, `Event` or `Product` adds the
-  node there and points at it from the page node's `about`.
-- **`robots.txt` and the sitemap**, generated from the CMS, with `SITE_LIVE=false`
-  disallowing everything while the domain still serves the old site.
-- **A social image that always resolves, cropped**: the project's SEO preferences carry a
-  fallback image, so a page whose SEO tab is empty still shares with a picture, and the page's
-  own image wins when it has one. Both are requested at 1200x630 with `crop: focalpoint`, so
-  whatever photo an editor picks becomes a correct preview and DatoCMS adds the asset's focal
-  point to the URL itself. This is why the starter emits `og:image` rather than taking Dato's,
-  which only ever resizes. `responsiveImage` reports the size of the crop, so the dimensions
-  are declared without a magic number in the TypeScript.
-- **Alt text as a validator**: every image field requires it, so an editor cannot publish a
-  gallery that is invisible to a screen reader and to image search. The logo is the
-  exception, the header falls back to the site name.
-- **A place for the legacy URLs**: `redirects.mjs` holds the old site's paths and any
-  retired domain, and `next.config.mjs` turns them into permanent redirects that run before
-  the locale routing. It ships empty, with the reasoning in the comments, including why a
-  blanket `/:path*` rule on your own domain is a mistake.
-
-The page graph is rendered from the route and always from published content, because in
-draft mode the content component runs in the browser, where there is no site origin to
-build an absolute URL from.
+- **Canonical link and `og:url`**, built by the route from the URL it answers on, through
+  the `pickSeoOverrides` option of `generateMetadataFn`.
+- **hreflang alternates**, one per existing translation plus `x-default`, in the `<head>`
+  and in the sitemap.
+- **JSON-LD**, two halves joined by `@id`: `Organization` and `WebSite` from the layout,
+  `WebPage` and a breadcrumb from the route. `src/lib/seo/structuredData.ts` is small on
+  purpose: a project that needs `LocalBusiness` or `Event` adds the node there.
+- **A social image that always resolves**, cropped to 1200x630 on the asset's focal point:
+  the page's own when it has one, the project fallback otherwise.
+- **Alt text as a validator** on every image field. The logo is the exception, the header
+  falls back to the site name.
+- **`robots.txt` and the sitemap** from the CMS, with `SITE_LIVE=false` disallowing
+  everything while the domain still serves the old site.
+- **`redirects.mjs`** for the legacy URLs, turned into permanent redirects that run before
+  the locale routing. It ships empty, with the reasoning in its comments.
 
 ## What is inside
 
@@ -178,13 +71,9 @@ Three layers. Keep them apart in your head:
   starts Google Tag Manager once the visitor has accepted, so there is no GTM snippet
   anywhere in the code.
 - **Example content**: seven sections (hero, text, image with text, image, image grid,
-  slider, accordion) and three nested blocks (link, accordion item, menu item). The image
-  section is the one with options rather than variants: the editor picks a width lane and an
-  aspect ratio, which is why its crop happens in CSS from the asset's focal point instead of
-  in the image URL. The slider is the only one with a dependency, `embla-carousel-react`. They are demonstrations of the
-  convention, and the **Abschnitte** page (`/abschnitte`, `/en/sections`) renders one of
-  each so you can see what you are choosing from. Copy one, then delete the ones the
-  project does not use, in the CMS and in the code, that page included.
+  slider, accordion) and three nested blocks (link, accordion item, menu item). The
+  **Abschnitte** page (`/abschnitte`, `/en/sections`) renders one of each. Copy one, then
+  delete what the project does not use, in the CMS and in the code, that page included.
 
 ## Conventions
 
@@ -224,43 +113,25 @@ Three layers. Keep them apart in your head:
 ## Design tokens
 
 `src/app/global.css` only imports layers. The system is `src/app/tokens`, in cascade order:
-the scale, then the roles that point at it, then the element defaults that read the roles.
-A project replaces the values in `primitives.css` and leaves the names alone.
+the scale, then the roles that point at it, then the element defaults that read the roles. A
+project replaces the values in `primitives.css` and leaves the names alone.
 
-Two files are generated and must never be hand-edited: `fluid.css` from
-`src/lib/layout/fluidScale.ts` and `breakpoints.css` from `src/lib/layout/breakpoints.ts`.
-The scales live in TypeScript so CSS, the helpers and the styleguide cannot disagree, and
-CI re-runs both generators and fails if the tree changes.
+`fluid.css` and `breakpoints.css` are generated from `src/lib/layout/fluidScale.ts` and
+`src/lib/layout/breakpoints.ts` and must never be hand-edited. The scales live in TypeScript
+so the CSS, the helpers and the styleguide cannot disagree, and CI fails on drift.
 
 ```bash
 npm run generate-fluid-tokens && npm run generate-breakpoint-tokens
 ```
 
-**Fluid sizing works in two stages.** Between 375px and 1920px every heading, the lead
-paragraph, the vertical rhythm and the gutters interpolate linearly, Utopia style, so no
-type or spacing needs a media query. Above 1920px the clamps are all pegged to their
-maximum, so the root font size takes over and grows to 2rem at ~3840px, which keeps the
-whole rem-based system in proportion instead of leaving a 1152px column in the middle of a
-4K screen. It is written as `max(1rem, …)` so a visitor who raised their browser font size
-never has it scaled back down. Body copy is the one thing that stays at 16px.
+Type and spacing interpolate between 375px and 1920px, and past that the root font size
+takes over so a wide screen keeps its proportions; body copy stays at 16px. Widths are
+lanes rather than per-component max-widths (`measure`, `content`, `wide`, `bleed`), plus
+`.layout-columns` for the twelve columns of the design grid. Headings are a serif with
+automatic hyphenation, because German compound words overflow a 96px line.
 
-**How wide a component may go is a lane, not a max-width of its own.** `.layout-lanes` is
-one grid whose outer tracks are the page gutter, so something reaching the edge of the
-screen takes those tracks instead of cancelling a padding with a negative margin. Four
-lanes: `measure` for prose, `content` for the default, `wide` a step past it for grids and
-sliders, `bleed` edge to edge. `SectionContainer` takes the lane as a prop, and the same
-grid works inside a section, which is how the hero puts its words back on the content lane
-over a full-width image. `.layout-columns` is the other half, the twelve columns of the
-design grid for a component that has to match a layout column for column; the columns
-divide whichever lane they sit in, so things that must align stay in the same lane. Both are
-visible on `/spacing`.
-
-Headings default to `--font-family-secondary`, a serif, with automatic hyphenation because
-German compound words overflow a 96px line. A project swaps the two families in
-`primitives.css` and everything follows.
-
-`/typography`, `/spacing` and `/ui` render the scale and the primitives. Look there before
-inventing a value.
+`/typography`, `/spacing` and `/ui` render all of it, the lanes included. Look there before
+inventing a value, and read the comments in `tokens/` before changing how any of it works.
 
 ## Motion
 
@@ -289,19 +160,14 @@ Copy `.env.local.example` to `.env.local` and fill it from the project's API tok
 
 ## Draft mode and visual editing
 
-The **Web Previews** plugin needs three values, all pointing at the deployment that is
-actually serving the site:
+`post-deploy` configures the **Web Previews** plugin, so these values are only needed when
+setting it up by hand: preview endpoint `<origin>/api/preview-links` with an
+`Authorization: Bearer` header, draft-mode route
+`<origin>/api/draft-mode/enable?token=<SECRET_API_TOKEN>`, initial path `/`. The secret
+travels as a header wherever the caller can send one; the draft-mode route is the exception,
+because a browser follows that one and cannot add a header.
 
-- Preview Links API Endpoint: `<origin>/api/preview-links`, plus a custom header
-  `Authorization: Bearer <SECRET_API_TOKEN>`
-- Enable Draft Mode route: `<origin>/api/draft-mode/enable?token=<SECRET_API_TOKEN>`
-- Initial Path: `/`
-
-The secret travels as a header wherever the caller can send one, because a URL is written
-down by every proxy and log in between. The draft-mode route is the exception: a browser
-follows that one, and a browser cannot add a header.
-
-Add a second frontend pointing at `http://localhost:3000` to get the same features while
+Add a second frontend pointing at `http://localhost:3000` for the same features while
 developing. With draft mode on, the page subscribes to the Real-time Updates API and edits
 appear without a reload.
 
@@ -326,8 +192,7 @@ secrets, and skip themselves with a notice when they are missing.
 
 ## Pulling updates from the DatoCMS starter kit
 
-The `upstream` remote points at `datocms/nextjs-starter-kit` and the histories are joined,
-so their changes can be reviewed and merged directly:
+The `upstream` remote points at `datocms/nextjs-starter-kit` and the histories are joined:
 
 ```bash
 git fetch upstream && git log --oneline HEAD..upstream/main
@@ -337,23 +202,14 @@ git fetch upstream && git log --oneline HEAD..upstream/main
 git merge upstream/main
 ```
 
-`git diff upstream/main -- src` prints the current divergence. The structural ones are the
-locale routing under `[locale]`, the component tree regrouped by what it renders (`cms`,
-`media`, `dev`, `blocks`, `sections`, `ui`, `layout`), the token layer replacing their
-`global.css`, and the section spine that replaced their demo routes. Pure moves merge fine
-because git detects renames; conflicts appear where we also changed the contents. Keep ours
-in those, take theirs everywhere else, and never let a security fix sit unmerged.
+Pure moves merge fine because git detects renames; conflicts appear where we changed the
+contents too. Keep ours there, take theirs everywhere else, and never let a security fix
+sit unmerged.
 
 ## Sending an improvement back to this base
 
-Keep the improvement in its own commit, touching only shared files. Then from here:
-
-```bash
-git fetch client && git cherry-pick <sha>
-```
-
-A commit that mixes shared and client-specific changes will conflict on cherry-pick,
-because the client-only files do not exist in this repo. That is why the commits stay clean.
-
-Anything with a client name, a brand colour, or a client content model in it does not belong
-here. If it is useful but hardcoded, make the hardcoded part a parameter and then bring it up.
+One commit, only shared files, then from here `git fetch client && git cherry-pick <sha>`.
+A commit that mixes shared and client-specific changes conflicts, because the client-only
+files do not exist in this repo. And anything carrying a client name, a brand colour or a
+client content model does not belong here: make the hardcoded part a parameter first, then
+bring it up.
