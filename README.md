@@ -63,8 +63,9 @@ DatoCMS template project **SPOT Nextjs DatoCMS starter** (project id `225924`).
 
 7. Invite the client with the **Editor** role, not as an admin. It can do everything to
    content and assets and can edit the favicon, the global SEO defaults and the no-index
-   switch, but not the schema or the project settings. Check the role exists on the new
-   project: whether it survives the deploy-flow copy is not yet verified.
+   switch, but not the schema or the project settings. The role does survive the deploy-flow
+   copy, verified on the first project made from this template, along with the models, the
+   demo content and the applied-migration records.
 
 8. **Before switching the DNS, fill `redirects.mjs`.** The site replaces an existing one,
    and the day the domain moves every URL Google has indexed either lands somewhere or
