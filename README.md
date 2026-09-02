@@ -53,6 +53,10 @@ DatoCMS template project **SPOT Nextjs DatoCMS starter** (project id `225924`).
    preferences, replace the fallback social image with the client's own. Then delete what
    the client does not need: deleting is cheaper and safer than generating.
 
+   The **Alt Text AI** plugin arrives with SPOT's trial key, which is capped and shared by
+   every project made from this template. It is there so the plugin works out of the box,
+   not as a project's own: a client that actually uses it gets its own key.
+
 6. Fill the two singletons in the CMS: **Layout** (logo, navigation, footer) and
    **Settings** (the interface wording, and the privacy client id once the site is
    registered in `legal.spotagency.ch`). Both come seeded with the template's demo values.
