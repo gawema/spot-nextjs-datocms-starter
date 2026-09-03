@@ -35,7 +35,7 @@ export default async function PageStructuredData({ locale, segments }: Props) {
       data={buildPageGraph({
         locale,
         url: canonicalPageUrl(segments, locale),
-        title: page.title ?? siteName,
+        title: page.title,
         siteName,
         isHome: page.isHome,
       })}

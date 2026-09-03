@@ -33,7 +33,7 @@ export default function SliderSection({ data }: Props) {
 
       <div data-datocms-content-link-group>
         <Carousel
-          label={heading ?? undefined}
+          label={heading || undefined}
           previousLabel={t('t_previous')}
           nextLabel={t('t_next')}
         >

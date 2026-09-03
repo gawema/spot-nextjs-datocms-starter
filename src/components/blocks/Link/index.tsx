@@ -1,6 +1,7 @@
 import { PageUrlFragment, buildUrlForPage } from '@/lib/datocms/gqlUrlBuilder/page';
 import { type FragmentOf, graphql, readFragment } from '@/lib/datocms/graphql';
 import type { SiteLocale } from '@/lib/i18n/locales';
+import { stripStega } from '@datocms/content-link';
 import NextLink from 'next/link';
 
 /**
@@ -36,9 +37,15 @@ type Props = {
 export default function Link({ data, locale, className = 'cms-link' }: Props) {
   const { label, externalUrl, openInNewTab, page } = readFragment(LinkFragment, data);
 
-  const href = page ? buildUrlForPage(page, locale) : externalUrl;
-  // An empty label falls back to the linked page's title.
-  const text = label ?? page?.title;
+  /*
+   * The markers are stripped from the URL and kept in the label: an href has to
+   * parse, the text is what the editor clicks to edit. The field has them turned
+   * off anyway, this also covers a project whose schema predates that.
+   */
+  const href = page ? buildUrlForPage(page, locale) : stripStega(externalUrl);
+  // An empty label falls back to the linked page's title. DatoCMS returns a
+  // cleared string field as "", which `??` would happily keep.
+  const text = label?.trim() || page?.title;
 
   // Nothing to link to, or nothing to show: the editor left the block half-filled.
   if (!href || !text) {

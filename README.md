@@ -106,6 +106,13 @@ Three layers. Keep them apart in your head:
 - **Never call DatoCMS from the proxy/middleware.** It runs on every request and does not
   use the Next.js Data Cache, so `force-cache` and `next.tags` are silently ignored. This
   has already caused a real API overage on another project.
+- **A string field the frontend reads as a value, not as text**, is created with
+  `content_link_enabled: false`. In draft mode content-link appends some 700 invisible
+  characters to every string, which is what makes click-to-edit work on the text that
+  reaches the page and what breaks anything going into an href, a data attribute or a
+  comparison. The default is on and nothing fails loudly, so the preview just renders
+  something else. Slugs are exempt, they are their own field type. Where the value comes
+  from somewhere this rule cannot reach, `stripStega` at the call site is the fallback.
 - **After any schema change**: `npm run generate-schema` and `npm run generate-cma-types`.
   Both also run in `prepare`, so a schema mismatch fails the build rather than breaking at
   runtime, and CI fails on drift between the CMS and the committed `schema.graphql`.
