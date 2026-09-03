@@ -248,10 +248,6 @@ export type Page = ItemTypeDefinition<
     is_home: {
       type: 'boolean';
     };
-    title: {
-      type: 'string';
-      localized: true;
-    };
     sections: {
       type: 'rich_text';
       blocks:
@@ -264,15 +260,19 @@ export type Page = ItemTypeDefinition<
         | AccordionSection;
       localized: true;
     };
-    slug: {
-      type: 'slug';
-      localized: true;
-    };
     seo_settings_social: {
       type: 'seo';
     };
     seo_analysis: {
       type: 'json';
+    };
+    title: {
+      type: 'string';
+      localized: true;
+    };
+    slug: {
+      type: 'slug';
+      localized: true;
     };
   }
 >;
